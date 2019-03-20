@@ -2,7 +2,7 @@
 
 
 El proyecto consiste en desarrollar un programa informático que permita a Central ParKing, un modelo de negocio comprometido con el medio ambiente, la gestión de un aparcamiento de vehiculos ubicado en la zona de bajas emisiones y de reciente creación denominada Madrid Central. Este programa implementará a través del sistema de gestión, beneficios y deducciones en las tarifas para los usuarios cuyos vehiculos sean menos contaminantes.
-Descripción breve del proyecto a realizar (2-3 frases).
+
 
 
 
@@ -30,4 +30,4 @@ El programa en cuestión permitirá gestionar:
 
 -Generación de un ticket para el usuario con los datos relevantes y de su interes (horas y fechas de entrada y salida, duración, tarifa aplicable, costo). 
 
-Lista de los objetivos que se persiguen con el trabajo propuesto.
+L
