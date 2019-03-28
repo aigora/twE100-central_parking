@@ -2,57 +2,69 @@
 #include <string.h>   
 #include <stdlib.h>
 #include <windows.h> 
+#include <conio.h>  //para usar gotoxy e imprimir por coordenadas
 
-struct plaza{
-	int planta;
-	int numero_plaza;
-	char tipo_plaza;
-	int estado_plaza;
+/*
+
+
+
+struct plaza[]{
+	int planta;    (i/45+1)
+	int numero_plaza; i
+	char tipo_plaza; (i/9+65)
+	int estado_plaza;  
 	int fecha_entrada_plaza;
 	int fecha_salida_plaza;
-	
-	
-};
+    };*/
+void gotoxy(short x, short y) {
+COORD pos = {x, y};
+SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}  
 
 int main(){
 	
+ system("mode con: cols=80 lines=55");  // establece el tamaño de pantalla
+ int x,y;	
  int opcioninicio;
+ bool repite;     //establece la variable que permite repite la aparicion del menu con do en caso de defaul (digito no valido)
  int i,k,j;
  int m1 [5][10];	
 	
- system("color 0E");
+ gotoxy( 26, 25); 
  printf("Bienvenido a Central Parking\n");
  Sleep(1000);
  system ("cls");
  
- printf("INICIO\nEscoja entre una de las siguientes opciones:\n");
+do{
+	gotoxy( 20, 20);
+ system("color 0E"); //varia colorde consola yu letras	
  
- SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | BACKGROUND_INTENSITY);
+ printf("             INICIO\n");
  
- printf("1 - Registrar Entrada o Salida\n");	
+ printf("\t Escoja entre una de las siguientes opciones:\n");
  
+ SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | BACKGROUND_INTENSITY);  //varia color de fondo y letras
  
- printf("2 - Consultar estado del Parking\n");
+ printf("\t     1 - Registrar Entrada o Salida         \n");	
  
+ printf("\t     2 - Consultar estado del Parking       \n");
  
- 
- printf("3 - Consultar tarifas\n");
+ printf("\t     3 - Consultar tarifas                  \n");
  
  scanf("%d",&opcioninicio);
  
  system("cls");
  
- 
- switch(opcioninicio) {
- 	case 1:
- 		printf("1 - Registrar Entrada o Salida\n");
- 		break;
- 	case 2:
- 		system("mode con: cols=80 lines=55");
- 		printf("2 - Consultar estado del Parking\n");
- 		Sleep(1000);
+    switch(opcioninicio) {
+    	case 1:
+ 	    	printf("1 - Registrar Entrada o Salida\n");
+ 	    	break;
+ 	    	
+    	case 2:
+ 	    	printf("2 - Consultar estado del Parking\n");
+ 	    	Sleep(1000);
  		
- 		for (k=0;k<=219;k++){ //condicion para crear las plazas  LARGO DEL PARKING
+ 	    	for (k=0;k<=219;k++){ //condicion para crear las plazas  LARGO DEL PARKING
 				
 		    	printf("|\t");  //imprime barras
 			        
@@ -157,19 +169,28 @@ int main(){
  	        	break;
  	            }
         }
-        break;	
- 	case 3:
- 		printf("3 - Consultar tarifas\n");	
-		 break;	
-	default:
-		while (opcioninicio!=1 && opcioninicio!=2 && opcioninicio!=3){
-		printf("Introduce una opcion valida: 1,2,3\n");
-		system("pause");
-		scanf("%d",&opcioninicio);	
-		}
-			
+            break;	
+            
+    	case 3:
+ 	    	printf("3 - Consultar tarifas\n");	
+		    break;	
+		    
+    	default:
+	    	while (opcioninicio!=1 && opcioninicio!=2 && opcioninicio!=3){
+		    printf("Por favor, introduce una opcion valida: 1,2,3\n");
+	     	Sleep(2000);
+	     	system("cls");
+	     	repite=true;
+			break;	
+		    }
+   }
 }
+while (repite);
+
 return 0 ;
  
 }
+
+
+/*void menu()*/
 
