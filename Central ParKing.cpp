@@ -28,11 +28,11 @@ int main(){
  system("mode con: cols=81 lines=55");  // establece el tamaño de pantalla
  int x,y;	
  int opcioninicio,parpadeo,opcionplanta;
- bool repite,repite2;     //establece la variable que permite repite la aparicion del menu con do en caso de defaul (digito no valido)
+ bool repite,repite2,repite3;     //establece la variable que permite repite la aparicion del menu con do en caso de defaul (digito no valido)
  int i,k,j;
- int m1 [10][10];	
+ int m1 [15][15];	
  char bajar;	
- gotoxy( 24, 25); 
+ gotoxy( 25, 20); 
  printf("Bienvenido a Central Parking\n");
  Sleep(1000);
  system ("cls");
@@ -42,7 +42,7 @@ int main(){
 do{
  system("color 0E"); //varia colorde consola yu letras	
  
- gotoxy( 20, 10);
+ gotoxy( 22, 10);
  
  printf("\t           INICIO\n");
  printf("\t         Escoja entre una de las siguientes opciones:\n");
@@ -58,7 +58,7 @@ do{
     switch(opcioninicio) {
     	case 1:
 			
-			/*for (parpadeo=220; parpadeo>=0;parpadeo--){
+			for (parpadeo=220; parpadeo>=0;parpadeo--){
 				
 			     gotoxy( 10, 22);
             
@@ -75,17 +75,16 @@ do{
             
                  parpadeo=((parpadeo-20)^(9/10))-12;    //funcion que incrementa la velocidad de parpadeo como en una parabola (el exponente aproximado a 1 hace que esta sea parabola sea menos pronunciada)
             }
-            */
+            
             system("color 0E");
  	    	printf("1 - Registrar Entrada o Salida\n");
  	    	
- 	    	
- 	    	
+ 	     	    	
  	    	break;
  	    	
     	case 2:
   		
-			/*for (parpadeo=220; parpadeo>=0;parpadeo--){
+			for (parpadeo=220; parpadeo>=0;parpadeo--){
 				
 			     gotoxy( 10, 12);
             
@@ -102,7 +101,7 @@ do{
             
                  parpadeo=((parpadeo-20)^(9/10))-12;    //funcion que incrementa la velocidad de parpadeo como en una parabola (el exponente aproximado a 1 hace que esta sea parabola sea menos pronunciada)
             }
-    		*/
+    		
     		
     		
  	    	do{
@@ -121,219 +120,188 @@ do{
  	    	
  	    		
  	    		switch(opcionplanta) {
- 	    			case 1:
+ 	    			case 1: 	    				
  	    				system("color 0E");
- 	    				printf("\t\t\t\t PLANTA 1\n");
- 	    				for (k=0;k<=219;k++){ //condicion para crear las plazas  LARGO DEL PARKING				
+ 	    				printf("\n\n\t\t\t\t     PLANTA 1\n\n\n");
+ 	    				for (k=1;k<=242;k++){ //condicion para crear las plazas  LARGO DEL PARKING				
 		                	printf("|\t");  //imprime barras			        	           
-		                    while   (k==49){               //fila numerica       DA EL LARGO DE LAS PLAZAS   50 DE COCHE
-		    
-		                	    i=0; //meter en el futuro el cuadrante a partir de la estructura
-		       	    
+		                    while   (k==55){               //fila numerica       DA EL LARGO DE LAS PLAZAS   55 DE COCHE		    
+		                	    i=0; //meter en el futuro el cuadrante a partir de la estructura		       	    
 	     	                    for (j=1;j<=10;j++){
-	     	        	
-	     	                        m1[i][j]=i*9+j;
-	     	          	
-					             	if (m1[i][j]==10){               //condicion para imprimir el cuadrante
-		                            	m1[i][j]='A';         //introducir la direccion al cuadrante de la estructura
-		                            	printf("|   %c\t",m1[i][j]);
-					            	}  
-				                    else{
-				                        printf("|   %d\t",m1[i][j]);
-				                    }				        
+	     	                        m1[i][j]=i*10+j;
+				                    printf("|   %d\t",m1[i][j]);    				        
 		                        }
-		                        printf("\n\n\n");
+		                        printf("|\n\n\n\n");
 		                        break; 
 			             	}		            
-		                    while   (k==99){               //fila numerica
-		       	    
-				              	i=1; //meter en el futuro el cuadrante a partir de la estructura
-					
+		                    while   (k==110){               //fila numerica		       	    
+				              	i=1; //meter en el futuro el cuadrante a partir de la estructura					
 	     	                    for (j=1;j<=10;j++){
 
-	     	                        m1[i][j]=i*9+j;
-	     	            
-						            if (m1[i][j]==19){               //condicion para imprimir el cuadrante poner i= al cuadrante cmo condicion
-		                            	m1[i][j]='B';         //introducir la direccion al cuadrante de la estructura
-		                            	printf("|   %c\t",m1[i][j]);
-					            	}  
-				                    else{
-				                    printf("|   %d\t",m1[i][j]);
-				                    }   
-		                        }
-		                        printf("\n\n\n");
+	     	                        m1[i][j]=i*10+j;
+	     	                        printf("|   %d\t",m1[i][j]);
+				                }     		                        
+		                        printf("|\n\n\n\n");
 		                        break;   
 	                        }	           
-	                        while   (k==119){               //fila numerica       DA EL LARGO DE LAS PLAZAS   20 DE MOTO
-		       	    
-				            	i=2; //meter en el futuro el cuadrante a partir de la estructura
-					
+	                        while   (k==132){               //fila numerica       DA EL LARGO DE LAS PLAZAS   22 DE MOTO		       	    
+				            	i=2; //meter en el futuro el cuadrante a partir de la estructura					
 	     	                    for (j=1;j<=10;j++){
-
-	     	                        m1[i][j]=i*9+j;
-	     	            
-					            	if (m1[i][j]==28){               //condicion para imprimir el cuadrante poner i= al cuadrante cmo condicion  //tambien sumando de 9 en 9
-		                            	m1[i][j]='C';         //introducir la direccion al cuadrante de la estructura
-		                            	printf("|   %c\t",m1[i][j]);
-					            	}  
-				                   else{
-				                        printf("|   %d\t",m1[i][j]);
-				                   }   
+	     	                        m1[i][j]=i*10+j;	     	                      	
+				                    printf("|   %d\t",m1[i][j]);				                     
 		                        }
-		                        printf("\n\n\n");
+		                        printf("|\n\n\n\n");
 		                        break;   
 	                        }	           
-	                        while   (k==169){               //fila numerica
-		       	    
-				            	i=3; //meter en el futuro el cuadrante a partir de la estructura   
-					
+	                        while   (k==187){               //fila numerica		       	    
+				            	i=3; //meter en el futuro el cuadrante a partir de la estructura  					
 	     	                    for (j=1;j<=10;j++){      
-
-	     	                        m1[i][j]=i*9+j;             //numeracion de las plazaS
-	     	            
-					            	if (m1[i][j]==37){               //condicion para imprimir el cuadrante poner i= al cuadrante cmo condicion  //tambien sumando de 9 en 9
-		                            	m1[i][j]='D';         //introducir la direccion al cuadrante de la estructura
-		                	            printf("|   %c\t",m1[i][j]);
-					            	}  
-				                    else{
-				                        printf("|   %d\t",m1[i][j]);
-				                    }   
-		                       }
-		                        printf("\n\n\n");
-		                        break;   
-	                    }
-	                        while   (k==219){               //fila numerica
-		       	    
-				        	    i=4; //meter en el futuro el cuadrante a partir de la estructura   
-					
-	     	                    for (j=1;j<=10;j++){      
-
-	     	                        m1[i][j]=i*9+j;             //numeracion de las plazaS
-	     	            
-					        	    if (m1[i][j]==46){               //condicion para imprimir el cuadrante poner i= al cuadrante cmo condicion  //tambien sumando de 9 en 9
-		                	            m1[i][j]='E';         //introducir la direccion al cuadrante de la estructura
-		                                printf("|   %c\t",m1[i][j]);
-					            	}  
-				                    else{
-				                        printf("|   %d\t",m1[i][j]);
-				                    }   
+	     	                        m1[i][j]=i*10+j;             //numeracion de las plazaS	     	            					            	
+				                    printf("|   %d\t",m1[i][j]);				                       
 		                        }
-		                        printf("\n\n\n");
+		                        printf("|\n\n\n\n");
+		                        break;   
+	                        }
+	                        while   (k==242){               //fila numerica		       	    
+				        	    i=4; //meter en el futuro el cuadrante a partir de la estructura  					
+	     	                    for (j=1;j<=10;j++){      
+	     	                        m1[i][j]=i*10+j;             //numeracion de las plazaS	     	            					        	    
+				                    printf("|   %d\t",m1[i][j]);				                       
+		                        }
+		                        printf("|\n\n\n\n");
  	                        	break;
- 	                        }
-                        }
+ 	                        } 	                       
+                        }                        
+                        getch();
+                        system("cls");
+                        repite2=true;                       
                         break;
+                        
                     case 2:
                     	system("color 0E");
- 	    				printf("\t\t\t\t PLANTA 2\n");
-                    	for (k=0;k<=189;k++){ //condicion para crear las plazas  LARGO DEL PARKING				
+ 	    				printf("\n\n\t\t\t\t     PLANTA 2\n\n\n");
+                    	for (k=1;k<=219;k++){ //condicion para crear las plazas  LARGO DEL PARKING				
 		                	printf("|\t");  //imprime barras			        	           
-		                    while   (k==49){               //fila numerica       DA EL LARGO DE LAS PLAZAS   50 DE COCHE
-		    
-		                	    i=5; //meter en el futuro el cuadrante a partir de la estructura
-		       	    
-	     	                    for (j=1;j<=10;j++){
-	     	        	
-	     	                        m1[i][j]=i*9+j;
-	     	          	
-					             	if (m1[i][j]==55){               //condicion para imprimir el cuadrante
-		                            	m1[i][j]='F';         //introducir la direccion al cuadrante de la estructura
-		                            	printf("|   %c\t",m1[i][j]);
-					            	}  
-				                    else{
-				                        printf("|   %d\t",m1[i][j]);
-				                    }				        
+		                    while   (k==55){               //fila numerica       DA EL LARGO DE LAS PLAZAS   55 DE COCHE		    
+		                	    i=5; //meter en el futuro el cuadrante a partir de la estructura		       	    
+	     	                    for (j=1;j<=10;j++){	     	        	
+	     	                        m1[i][j]=i*10+j;	     	          						             						            				                    
+				                    printf("|   %d\t",m1[i][j]);				                    				        
 		                        }
-		                        printf("\n\n\n");
+		                        printf("|\n\n\n\n\n");
 		                        break; 
 			             	}		            
-		                    while   (k==69){               //fila numerica                 MOTO
-		       	    
-				              	i=6; //meter en el futuro el cuadrante a partir de la estructura
-					
+		                    while   (k==77){               //fila numerica                 MOTO		       	    
+				              	i=6; //meter en el futuro el cuadrante a partir de la estructura					
 	     	                    for (j=1;j<=10;j++){
-
-	     	                        m1[i][j]=i*9+j;
-	     	            
-						            if (m1[i][j]==64){               //condicion para imprimir el cuadrante poner i= al cuadrante cmo condicion
-		                            	m1[i][j]='B';         //introducir la direccion al cuadrante de la estructura
-		                            	printf("|   %c\t",m1[i][j]);
-					            	}  
-				                    else{
+	     	                        m1[i][j]=i*10+j;	     	            
+				                    printf("|   %d\t",m1[i][j]);				                      
+		                        }
+		                        printf("|\n\n\n\n\n");
+		                        break;   
+	                        }	           
+	                        while   (k==132){               //fila numerica       DA EL LARGO DE LAS PLAZAS   COCHE		       	    
+				            	i=7; //meter en el futuro el cuadrante a partir de la estructura					
+	     	                    for (j=1;j<=10;j++){
+	     	                        m1[i][j]=i*10+j;	     	            
+				                    printf("|   %d\t",m1[i][j]);				                     
+		                        }
+		                        printf("|\n\n\n\n\n");
+		                        break;   
+	                        }	           
+	                        while   (k==154){               //fila numerica		       	    
+				            	i=8; //meter en el futuro el cuadrante a partir de la estructura   					
+	     	                    for (j=1;j<=10;j++){      
+	     	                        m1[i][j]=i*10+j;             //numeracion de las plazaS
 				                    printf("|   %d\t",m1[i][j]);
 				                    }   
-		                        }
-		                        printf("\n\n\n\n");
+		                       
+		                        printf("|\n\n\n\n\n");
 		                        break;   
-	                        }	           
-	                        while   (k==119){               //fila numerica       DA EL LARGO DE LAS PLAZAS   COCHE
-		       	    
-				            	i=7; //meter en el futuro el cuadrante a partir de la estructura
-					
-	     	                    for (j=1;j<=10;j++){
-
-	     	                        m1[i][j]=i*9+j;
-	     	            
-					            	if (m1[i][j]==73){               //condicion para imprimir el cuadrante poner i= al cuadrante cmo condicion  //tambien sumando de 9 en 9
-		                            	m1[i][j]='C';         //introducir la direccion al cuadrante de la estructura
-		                            	printf("|   %c\t",m1[i][j]);
-					            	}  
-				                   else{
-				                        printf("|   %d\t",m1[i][j]);
-				                   }   
-		                        }
-		                        printf("\n\n\n\n");
-		                        break;   
-	                        }	           
-	                        while   (k==139){               //fila numerica
-		       	    
-				            	i=8; //meter en el futuro el cuadrante a partir de la estructura   
-					
+	                        }
+	                        while   (k==219){               //fila numerica		       	    
+				        	    i=9; //meter en el futuro el cuadrante a partir de la estructura   					
 	     	                    for (j=1;j<=10;j++){      
-
-	     	                        m1[i][j]=i*9+j;             //numeracion de las plazaS
-	     	            
-					            	if (m1[i][j]==82){               //condicion para imprimir el cuadrante poner i= al cuadrante cmo condicion  //tambien sumando de 9 en 9
-		                            	m1[i][j]='D';         //introducir la direccion al cuadrante de la estructura
-		                	            printf("|   %c\t",m1[i][j]);
-					            	}  
-				                    else{
-				                        printf("|   %d\t",m1[i][j]);
-				                    }   
-		                       }
-		                        printf("\n\n\n");
-		                        break;   
-	                    }
-	                        while   (k==189){               //fila numerica
-		       	    
-				        	    i=9; //meter en el futuro el cuadrante a partir de la estructura   
-					
-	     	                    for (j=1;j<=10;j++){      
-
-	     	                        m1[i][j]=i*9+j;             //numeracion de las plazaS
-	     	            
-					        	    if (m1[i][j]==91){               //condicion para imprimir el cuadrante poner i= al cuadrante cmo condicion  //tambien sumando de 9 en 9
-		                	            m1[i][j]='E';         //introducir la direccion al cuadrante de la estructura
-		                                printf("|   %c\t",m1[i][j]);
-					            	}  
-				                    else{
-				                        printf("|   %d\t",m1[i][j]);
-				                    }   
+	     	                        m1[i][j]=i*10+j;             //numeracion de las plazaS	     	            
+				                    printf("|   %d\t",m1[i][j]);				                       
 		                        }
-		                        printf("\n\n\n");
+		                        printf("|\n\n\n\n\n");
  	                        	break;
  	                        }
                         }
-					    break;
+					    getch();
+                        system("cls");
+                        repite2=true;                       
+                        break;
+                        
+                    case 3: 	    				
+ 	    				system("color 0E");
+ 	    				printf("\n\n\t\t\t\t     PLANTA 3\n\n\n");
+ 	    				for (k=1;k<=242;k++){ //condicion para crear las plazas  LARGO DEL PARKING				
+		                	printf("|\t");  //imprime barras			        	           
+		                    while   (k==55){               //fila numerica       DA EL LARGO DE LAS PLAZAS   55 DE COCHE		    
+		                	    i=10; //meter en el futuro el cuadrante a partir de la estructura		       	    
+	     	                    for (j=1;j<=10;j++){
+	     	                        m1[i][j]=i*10+j;
+				                    printf("|  %d\t",m1[i][j]);    				        
+		                        }
+		                        printf("|\n\n\n\n");
+		                        break; 
+			             	}		            
+		                    while   (k==110){               //fila numerica		       	    
+				              	i=11; //meter en el futuro el cuadrante a partir de la estructura					
+	     	                    for (j=1;j<=10;j++){
+
+	     	                        m1[i][j]=i*10+j;
+	     	                        printf("|  %d\t",m1[i][j]);
+				                }     		                        
+		                        printf("|\n\n\n\n");
+		                        break;   
+	                        }	           
+	                        while   (k==132){               //fila numerica       DA EL LARGO DE LAS PLAZAS   22 DE MOTO		       	    
+				            	i=12; //meter en el futuro el cuadrante a partir de la estructura					
+	     	                    for (j=1;j<=10;j++){
+	     	                        m1[i][j]=i*10+j;	     	                      	
+				                    printf("|  %d\t",m1[i][j]);				                     
+		                        }
+		                        printf("|\n\n\n\n");
+		                        break;   
+	                        }	           
+	                        while   (k==187){               //fila numerica		       	    
+				            	i=13; //meter en el futuro el cuadrante a partir de la estructura  					
+	     	                    for (j=1;j<=10;j++){      
+	     	                        m1[i][j]=i*10+j;             //numeracion de las plazaS	     	            					            	
+				                    printf("|  %d\t",m1[i][j]);				                       
+		                        }
+		                        printf("|\n\n\n\n");
+		                        break;   
+	                        }
+	                        while   (k==242){               //fila numerica		       	    
+				        	    i=14; //meter en el futuro el cuadrante a partir de la estructura  					
+	     	                    for (j=1;j<=10;j++){      
+	     	                        m1[i][j]=i*10+j;             //numeracion de las plazaS	     	            					        	    
+				                    printf("|  %d\t",m1[i][j]);				                       
+		                        }
+		                        printf("|\n\n\n\n");
+ 	                        	break;
+ 	                        } 	                       
+                        }                        
+                        getch();
+                        system("cls");
+                        repite2=true;                       
+                        break;    
+												
                     case 4 :
                     	system("cls"); 
+                    	repite2=false;     //si no se pone no deja retroceder despues de haber entrado y retrocedido en en buble de repite2 ya que al salir se le asigna true
 						repite=true;   
+						
 						break;	
 						
  	    			default:
 	                  	while (opcionplanta!=1 && opcionplanta!=2){
 	                  		system("cls");
-	                  		gotoxy( 25, 25);
+	                  		gotoxy( 20, 20);
 		                    printf("Por favor, introduce una opcion valida: 1,2\n");
 	     	                Sleep(1500);
 	     	                system("cls");
