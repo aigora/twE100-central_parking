@@ -29,27 +29,51 @@ int main(){
  bool repite;     //establece la variable que permite repite la aparicion del menu con do en caso de defaul (digito no valido)
  int i,k,j;
  int m1 [5][10];	
-	
+ char bajar;	
  gotoxy( 26, 25); 
  printf("Bienvenido a Central Parking\n");
  Sleep(1000);
  system ("cls");
  
+ 
+
 do{
-	gotoxy( 20, 20);
+ 
  system("color 0E"); //varia colorde consola yu letras	
  
- printf("             INICIO\n");
+ printf("\t           INICIO\n");
  
- printf("\t Escoja entre una de las siguientes opciones:\n");
+ printf("\t         Escoja entre una de las siguientes opciones:\n");
  
  SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | BACKGROUND_INTENSITY);  //varia color de fondo y letras
+ printf("\t\t       1 - Registrar Entrada o Salida         \n");	
  
+ SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+ printf("\t\t       2 - Consultar estado del Parking       \n");
+ printf("\t\t       3 - Consultar tarifas                  \n");
+
+ bajar=getch();
+ 
+ /*if (bajar == '+'){*/
+ 
+do{
+	int g;
+	
+	gotoxy( 20, 20+i);	
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | BACKGROUND_INTENSITY);
+	getch();
+	i++;	
+	
+}	
+while(bajar);	
+/*
  printf("\t     1 - Registrar Entrada o Salida         \n");	
  
+ SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | BACKGROUND_INTENSITY);  //varia color de fondo y letras
  printf("\t     2 - Consultar estado del Parking       \n");
- 
+ SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
  printf("\t     3 - Consultar tarifas                  \n");
+}*/
  
  scanf("%d",&opcioninicio);
  
@@ -57,6 +81,33 @@ do{
  
     switch(opcioninicio) {
     	case 1:
+    		
+			int parpadeo1;
+			int l;
+			/*for (parpadeo1=0 ; parpadeo1<=1 ; parpadeo1 ++){*/
+				for (l=200; l>=0;l--){
+				
+			gotoxy( 20, 20);
+            
+            printf("\t           INICIO\n");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | BACKGROUND_INTENSITY);  //varia color de fondo y letras
+            printf("\t\t       1 - Registrar Entrada o Salida         \n");	
+ 
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            printf("\t\t       2 - Consultar estado del Parking       \n");
+            printf("\t\t       3 - Consultar tarifas                  \n");
+            Sleep(200);
+            system ("cls");
+           /* system("color 0E");*/
+            Sleep(l);
+            l=(l^(8/9))-20;
+            }
+    /*	}*/
+    	    
+    	    
+    		
+            system ("cls");
+            
  	    	printf("1 - Registrar Entrada o Salida\n");
  	    	break;
  	    	
@@ -190,7 +241,6 @@ while (repite);
 return 0 ;
  
 }
-
 
 /*void menu()*/
 
