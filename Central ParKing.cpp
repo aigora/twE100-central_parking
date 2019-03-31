@@ -22,7 +22,7 @@ struct plaza {
 int buscarPlazaLibre(struct plaza parking[],char tipovehiculo);    
 void leerFichero(char direccion[],struct plaza parking[]);
 void gotoxy(short x, short y);
-void fecha();
+int fecha();
 
 
 
@@ -124,9 +124,14 @@ do{
                 		plazaasignada=buscarPlazaLibre(parking,tipovehiculo);
                 			if (plazaasignada!=-1){
                 				system("color 0E");
+                				int u;
                 				fecha();
                     			gotoxy(22, 12);
                     			parking[plazaasignada].estado_plaza=1;
+                    			parking[plazaasignada].hora_entrada=fecha();
+                    			Sleep(2000);
+                    			
+                    			printf(" %d\n\n\t\t\t",parking[plazaasignada].hora_entrada);
                     			printf("Indique la matricula de su %c\n\n\t\t\t",tipovehiculo);
                     			Sleep(3500);
                 	    		break;
@@ -540,7 +545,8 @@ void gotoxy(short x, short y) {
 COORD pos = {x, y};
 SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 } 
-void fecha(){
+int fecha(){
+ int tiempo;	
  int hora,minutos,dia,mes,ano;	
  time_t t=time(NULL);
  
@@ -554,5 +560,9 @@ void fecha(){
  
  gotoxy(63,0);
  printf("%d:%d  %d/%d/%d",hora,minutos,dia,mes+1,ano+1900);
+ 
+ tiempo=hora*60+minutos;
+ 
+ return tiempo;
 }
 
