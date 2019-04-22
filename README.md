@@ -30,4 +30,3 @@ El programa en cuestión permitirá gestionar:
 
 -Generación de un ticket para el usuario con los datos relevantes y de su interes (horas y fechas de entrada y salida, duración, tarifa aplicable, costo). 
 
-L
