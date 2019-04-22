@@ -7,11 +7,11 @@
 #include <time.h>
 
 struct tipos_distintivo {
-	char pegatina_cero[4];
-	char pegatina_eco[4];
-	char pegatina_c[4];
-	char pegatina_b[4];
-	char sin_pegatina[4];
+	char pegatina_cero;
+	char pegatina_eco;
+	char pegatina_c;
+	char pegatina_b;
+	char sin_pegatina;
 };
 
 struct plaza {
@@ -27,8 +27,8 @@ struct plaza {
     };
     
 struct distintivo {
-	char matricula[10];
-	char tipo_etiqueta[4]; //con otro numero no funciona
+	char matricula[8];
+	char tipo_etiqueta; //con otro numero no funciona
 };
 
 int coincide(struct plaza parking[],int plazaasignada);    
@@ -84,14 +84,14 @@ int main(){
  fecha();
  
  
-
- for (i=1;i<=20000;i++){
+/*
+ for (i=0;i<=20000;i++){
  
 						
-							printf("\n%s \t %s\n", ambiental[i].matricula , ambiental[i].tipo_etiqueta );
-							Sleep(100);
+							printf("%s %c\n", ambiental[i].matricula , ambiental[i].tipo_etiqueta );
+							Sleep(1000);
 }
-getchar();
+getchar();*/
  
  
  
@@ -195,6 +195,9 @@ do{
 		 				 			    system("color 0C");
 			 							gotoxy(24, 17);
 									 	printf("El vehiculo ya esta en el parking");
+									 	for(i=1;i<=7;i++){                                          //escribe guiones para la matricula vacia                    			        
+                    	 		          	parking[plazaasignada].matricula[i] = '-';              //para que nos devuelva el valor por defecto si la plaza no se asigna finalmente y no aparezca en listas plazas parking      			        		
+							 	    	}
 									 	Sleep(2000);           		         	
                     		         	repite3=true;                    			        
 					 					system("cls");
@@ -457,19 +460,24 @@ return 0 ;
 int coincide(struct plaza parking[], int plaza){
  	int i,coincide;		
  	coincide=0;
- 	while(i<150 && i!=plaza){
+ 	for(i=1;i<=150;i++){
 	
+		if(i!=plaza){
+		
 		
  		if( strcmp(parking[i].matricula,parking[plaza].matricula)==0){		// if si coincide 
 		   /*coincide=1;*/
  		    coincide=i; //se añade para que la funcion sirva para registrar la salida del parking ya que necesitamos saber que plaza es la quie coincide para cambiar su estado
 		                //tambien modificamos las condiciones y en sicoincide==1 ponemos sicoincide!=0		    		    
 		    break;
- 	    }			
+ 	    }	
+    	}
      	else{
  	    	coincide=0;
  	    	i++;
      	}
+        
+        
  	}
  	return coincide;
 }
@@ -694,7 +702,7 @@ void leerDistintivo(char direccion2[],struct distintivo ambiental[]){
   		return ; // Se termina el programa en este punto
  		}
  	for (i=1;i<=20000;i++){
- 	    fscanf(fp,"%s %s\n", &ambiental[i].matricula , &ambiental[i].tipo_etiqueta );
+ 	    fscanf(fp,"%s %c\n", &ambiental[i].matricula , &ambiental[i].tipo_etiqueta );
  		}
  	gotoxy( 25, 29);
  	printf("Distintivos ambientales   OK\n");
@@ -743,17 +751,20 @@ int calculartarifa(struct plaza parking[],struct distintivo ambiental[],struct t
 
 
 int exixte_la_matricula(struct plaza parking[],struct distintivo ambiental[],int plazaasignada){
-int i;
+int i,existe_la_matricula;
 for(i=0;i<=20000;i++){
-	if(strcmp(ambiental[i].matricula,parking[plazaasignada].matricula)!=0){
-		return 1;
+	if(strcmp(parking[plazaasignada].matricula,ambiental[i].matricula)==0){
+		printf("%s\n %s",parking[plazaasignada].matricula,ambiental[i].matricula);
+		Sleep(3000);
+		existe_la_matricula=1;
 		break;
 	}
-	else if (strcmp(ambiental[i].matricula,parking[plazaasignada].matricula)==0){
-		return 0;
+	else if (strcmp(ambiental[i].matricula,parking[plazaasignada].matricula)!=0){
+		existe_la_matricula=0;
 	}
    }
    
+return existe_la_matricula;
 }
 
 
