@@ -141,7 +141,7 @@ do{
 								while(i<150 && i !=plazaasignada){																	
 									   if  (strcmp(parking[i].matricula,parking[plazaasignada].matricula)==0){									
 									   coincide=1;
-									   printf("Indi %s      %s",parking[i].matricula,parking[plazaasignada].matricula); ////////////asi siempre coincide porque la plazaasignada tambien la cuenta entre 0 y 150 al recorrerla la i
+									   printf("Indi %s      %s",parking[i].matricula,parking[plazaasignada].matricula); ////////////asi siempre coincide porque la plazaasignada tambien la cuenta entre 0 y 150 al recorrerla la i ////recurso para comprobar el funcionamiento (con esto se ve como siempre coincidia)
 									   	Sleep(4000);
 									   fflush(stdin);
 		                               break;
