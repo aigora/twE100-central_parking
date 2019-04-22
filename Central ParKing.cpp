@@ -21,7 +21,8 @@ int coincide(struct plaza parking[],int plazaasignada);
 int esDigitoValido(char caracter);    
 int esLetraValida(char caracter);
 int esMatriculaValida(char matricula[]);
-int buscarPlazaLibre(struct plaza parking[],char tipovehiculo);    
+int buscarPlazaLibre(struct plaza parking[],char tipovehiculo);
+void plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta);    
 void leerFichero(char direccion[],struct plaza parking[]);
 void salvarFichero(char direccion[],struct plaza parking[]);
 void gotoxy(short x, short y);
@@ -445,7 +446,11 @@ do{
  	    				printf("\n\n\t\t\t\t     PLANTA 3\n\n\n");
  	    					int k;
  	    					k=0;
-							 
+ 	    					plazas_de_aparcamiento(parking,101,111);  
+ 	    					plazas_de_aparcamiento(parking,111,121);
+ 	    					plazas_de_aparcamiento(parking,121,131);
+ 	    					plazas_de_aparcamiento(parking,131,141);
+							 /*
 							 while(k<5){
 							 		
 							 for (i=1;i<=11;i++){
@@ -488,8 +493,8 @@ do{
 								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
 						    	printf("|");
 							break;
-					}
-					printf("|\n\n\n\n");
+					}*/
+					
 					Sleep(8000);		    
 							    
 							    
@@ -759,6 +764,70 @@ int esMatriculaValida(char matricula[]) {
 
 	return mvalida;
 }
+
+void plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta){
+	int i,k,largodeplaza;
+	k=0;
+	if(parking[desde].tipo_plaza=='C'){
+		largodeplaza=5;                        //con el valor de 5 imprime de largo 5 caracteres usadas para el coche y 3 para moto
+	}
+	else if (parking[desde].tipo_plaza=='M'){
+		largodeplaza=3;
+	}
+	
+	while(k<largodeplaza){
+							 		
+							 for (i=desde;i<=hasta;i++){
+							 
+						     	if(parking[i].estado_plaza==1 && i!=hasta){
+						     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+						    	printf("|");
+						    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 200);
+						     	printf("       ");
+						     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);
+						        }
+							 	else if (parking[i].estado_plaza==0 && i!=hasta) {
+							 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+						    	printf("|");
+						    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						     	printf("       ");
+						     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+								}
+								else if(i==hasta){								
+								printf("|\n");
+								k++;
+								
+							    break;
+						     	}
+					    	    }
+					        }
+	if (k==largodeplaza){
+						        
+							    for (i=desde;i<=hasta-1;i++){
+							    		                       
+								if(parking[desde].planta==1 || parking[desde].planta==2){					
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+						    	printf("|");
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+								printf("   %d  ",i);
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+						        }
+						        else if(parking[desde].planta==3){					            // condiciones distintas para las plantas ya que al variar de 2 a 3 digitos descuadra los numeros de las plazas
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+						    	printf("|");
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+								printf("  %d  ",i);                                             //un espacio menos precede al numero de plaza
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+						        }
+						    	
+						    }
+						printf("\n\n\n\n");
+					}
+	
+}
+
+
+
 void leerFichero(char direccion[],struct plaza parking[]) {
 	int i;
 	FILE*pf;
