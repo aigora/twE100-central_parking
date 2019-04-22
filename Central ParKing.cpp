@@ -525,85 +525,91 @@ int buscarPlazaLibre(struct plaza parking[],char tipovehiculo) {
 	j=0;
 	k=0;
 	l=0;
-	for (i=0;i<=150;i++) {
-		if ((parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32) && (parking[i].estado_plaza == 0 && parking[i].planta == 1)) { //-32 por si se digita en tipovehiculo una c para que sea igual que C			
-			j+=1;
-							
-			}
-		else if ((parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32) && (parking[i].estado_plaza == 0 && parking[i].planta == 2)){
-			k+=1;
+	for (i=1;i<=50;i++) {
+		if ( parking[i].estado_plaza == 1 && parking[i].planta == 1) { 		//cuenta los coches aparcados en la 1 planta	
+		 	j++;
+		}
+	}	
+	for (i=51;i<=100;i++) {
 			
-	    	}
-		else if ((parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32) && (parking[i].estado_plaza == 0 && parking[i].planta == 3)){	
-			l+=1;
+		if ( parking[i].estado_plaza == 1 && parking[i].planta == 2){
+			k++;
+		}
+	}		
+	for (i=101;i<=150;i++) {			    	
+		if (parking[i].estado_plaza == 1 && parking[i].planta == 3){	
+			l++;
 			
     	}
 	}///si no funciona hacer el bucle for por plantas de 1 a 50  50 100  100 150
 	    
-	   	    
-	if (j<k && j<l){////compara las tres plantas para asignar la plaza a la que menos coches tenga
+	 ////compara las tres plantas para asignar la plaza a la que menos coches tenga  	    
+	if (j<k && j<l){ //si en la 1 hay menos aparca ahi
 	    for (i=0;i<=150;i++){
-	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 1){
+	    	if ((parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32) && (parking[i].estado_plaza == 0 && parking[i].planta == 1)){//-32 por si se digita en tipovehiculo una c para que sea igual que C
 	    		plazalibre=i;
 	    		break;
 			}
 		}
 		
 	}
-	else if (k<j && k<l){
+	else if (k<j && k<l){//si en la 2 hay menos aparca ahi
 		for (i=0;i<=150;i++){
-	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 2){
+	    	if ((parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32) && (parking[i].estado_plaza == 0 && parking[i].planta == 2)){
 	    		plazalibre=i;
 	    		break;
 			}
 		}
 		
 	}
-	else if (l<j && l<k){
+	else if (l<j && l<k){//si en la 3 hay menos aparca ahi
 		for (i=0;i<=150;i++){
-	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 3){
+	    	if ((parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32) && (parking[i].estado_plaza == 0 && parking[i].planta == 3)){
 	    		plazalibre=i;
 	    		break;
 			}
 		}
 		
 	}
-	else if (j==k && k==l){
+	else if (j==k && k==l){//si en todas hay los mismos aparca en la 1
 		for (i=0;i<=150;i++){
-	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 1){
+	    	if ((parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32) && (parking[i].estado_plaza == 0 && parking[i].planta == 1)){
 	    		plazalibre=i;
 	    		break;
 			}
 		}
 		
 	}
-	else if (j>k && k==l){
+	else if (j>k && k==l){//si en la 1 hay mas y en las otras hay los mismos aparca en la 2
 		for (i=0;i<=150;i++){
-	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 2){
+	    	if ((parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32) && (parking[i].estado_plaza == 0 && parking[i].planta == 2)){
 	    		plazalibre=i;
 	    		break;
 			}
 		}
 		
 	}
-	else if (k>j && j==l){
+	else if (k>j && j==l){//si en la 2 hay mas y en las otras hay los mismos aparca en la 3
 		for (i=0;i<=150;i++){
-	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 3){
+	    	if ((parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32) && (parking[i].estado_plaza == 0 && parking[i].planta == 3)){
 	    		plazalibre=i;
 	    		break;
 			}
 		}
 		
 	}
-	else if (l>j && j==k){
+	else if (l>j && j==k){//si en la 3 hay mas y en las otras hay los mismos aparca en la 1
 		for (i=0;i<=150;i++){
-	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 3){
+	    	if ((parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32) && (parking[i].estado_plaza == 0 && parking[i].planta == 1)){
 	    		plazalibre=i;
 	    		break;
 			}
 		}
 		
 	}
+	printf("%d %d %d",j,k,l);   //para ver si funciona lo anterior en la funcion
+	//tal como esta tiene en cuenta el tipo de vehiculo por lo que no funciona correctamente
+	Sleep(3000);
 	return plazalibre;
     }
 int esDigitoValido(char caracter) {
