@@ -187,7 +187,7 @@ do{
                     			     	intentos--;
                     			     	/*break;*/ //no lo ponemos para uqe no cierre el bucle do while
 					 				    }
-                     			    else if ((matriculavalida ==1 || matriculavalida==2) && intentos>0 && sicoincide==0){	   //cuando es valida y quedan mas de 0 intentos (al menos 1)=llevas menos de 3 intentos y es distinta de las que ya estan en el parking						 
+                     			    else if (matriculavalida ==1 && intentos>0 && sicoincide==0){	   //cuando es valida y quedan mas de 0 intentos (al menos 1)=llevas menos de 3 intentos y es distinta de las que ya estan en el parking						 
                      			        parking[plazaasignada].estado_plaza=1;                         //asigna un 1(ocupada) a la plaza asignada
                      			        parking[plazaasignada].hora_entrada=fecha();                   //coge fecha actual para la plaza asignada
 					   					gotoxy(24, 17);                  			
@@ -264,7 +264,7 @@ do{
 						 	        matriculavalida = esMatriculaValida(parking[0].matricula);  // funcion que valida la matricula introducida
 							     	sicoincide=coincide(parking,0);                             // funcion de coincidencia con matricula ya registrada
 																								
-                    	 		    if (matriculavalida == 0 && intentos>0 || sicoincide==0){  		//	cuando es validay llevas menos de 3 intentos	o ya hay una matricula igual registrada					    								              
+                    	 		    if (matriculavalida == 0 && intentos>0 && sicoincide==0){  		//	cuando es validay llevas menos de 3 intentos	o ya hay una matricula igual registrada					    								              
 						 				system("color 0C");  //texto se vuelve rojo			
 						 				gotoxy(25, 17); 
                     			     	printf("La matricula no es valida\n\n\t\t\t Intentelo de nuevo %d \n",intentos);
@@ -289,7 +289,7 @@ do{
 										 
 										 
 										precio=calculartarifa(parking,ambiental,pegatinas,sicoincide); 
-										printf("%d %d \n",parking[sicoincide].hora_entrada,parking[sicoincide].hora_salida);
+										
 										printf("%f",precio); 
 										Sleep(2000); 
 										 
@@ -603,43 +603,54 @@ int esLetraValida(char caracter) {
 	if (caracter >= 'a' && caracter <= 'z') {
 		caracter = caracter - 32;
 	}
-	if (caracter > 'A' && caracter <= 'Z' && caracter != 'E' && caracter != 'I' && caracter != 'O' && caracter != 'U') {
+	while (caracter > 'A' && caracter <= 'K' && caracter != 'E' && caracter != 'I' && caracter != 'O' && caracter != 'U') {
 		return 1;
-	}/*
-	if(caracter > 'A' && caracter <= 'K' && caracter != 'E' && caracter != 'I' && caracter != 'O' && caracter != 'U') {
+		break;
+	}
+	while (caracter > 'K' && caracter <= 'Z' && caracter != 'E' && caracter != 'I' && caracter != 'O' && caracter != 'U') {    //   condicion para que la matricula exista es decir la primera letra llegue hasta la k
 		return 2;
-	}*/
-	else {
+		
+	}
+	while(caracter < 'K' && caracter > 'Z'){	
 		return 0;
+		break;
 	}
 }
 int esMatriculaValida(char matricula[]) {
 	int mvalida = 1, i, numero,longitud;
 	for (i = 0; i < 7; i++) {
-		if (i < 4) {
+		while (i < 4) {
 			numero = esDigitoValido(matricula[i]);
 			if (numero == 0) {
 				mvalida = 0;
+					break;
 			}
-		}/*
-		else if (i=4){
-			numero = esLetraValida(matricula[i]);
-			if (numero == 0 || numero==1) {
-				mvalida = 0;
-			}*/
-		else if (i>4){
-			numero = esLetraValida(matricula[i]);
-			if (numero == 0 ) {
-				mvalida = 0;
-			}
+		
 		}
+		while (i=4){
+			numero = esLetraValida(matricula[i]);
+			if (numero == 2 || numero==0) {               //   condicion para que la matricula exista es decir la primera letra llegue hasta la k
+				mvalida = 0;
+				break;
+			}	
+				
+		}
+		while (i>5) {
+			numero = esLetraValida(matricula[i]);
+			if (numero == 0) {
+				mvalida = 0;
+				break;
+			}
+			
+		}
+		break;
 	}
 	longitud=strlen(matricula); //compara la longitud de la matricula y si es mayor que 7 no es valida
 	if (longitud > 7){
 		mvalida = 0;
 	}
 		
-
+	
 
 	return mvalida;
 }
