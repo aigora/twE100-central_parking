@@ -16,13 +16,19 @@ struct plaza {
 	int hora_entrada;
 	int hora_salida;
     };
+    
+struct distintivo {
+	char matricula[7];
+	char tipo_etiqueta[4];
+};
 
 int coincide(struct plaza parking[],int plazaasignada);    
 int esDigitoValido(char caracter);    
 int esLetraValida(char caracter);
 int esMatriculaValida(char matricula[]);
 int buscarPlazaLibre(struct plaza parking[],char tipovehiculo);
-void plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta);    
+void plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta); 
+void leerDistintivo(char direccion2[],struct distintivo ambiental[]);   
 void leerFichero(char direccion[],struct plaza parking[]);
 void salvarFichero(char direccion[],struct plaza parking[]);
 void gotoxy(short x, short y);
@@ -40,17 +46,36 @@ int main(){
  int m1 [15][15];	
  char tipovehiculo;	// para el menu
  char direccion[] = "plazas.txt";
+ char direccion2[] = "export_distintivo_ambiental.txt";
  char auxmatricula[7];
  struct plaza parking[150];
+ struct distintivo ambiental[5];
  int nplazas=150; // NO UTIL DE MOMENTO
  gotoxy( 25, 20); 
  printf("Bienvenido a Central Parking\n");
  Sleep(1000);
- leerFichero(direccion,parking); 
+ gotoxy( 25, 24);
+ printf("Cargando datos...\n");
  Sleep(1000);
+ leerFichero(direccion,parking); 
+ Sleep(500);
+ leerDistintivo(direccion2,ambiental);
+ 
+ Sleep(1000);
+ 
  system ("cls");
  
  fecha();
+ 
+
+ for (i=1;i<=5;i++){
+ 
+						
+							printf("\n%s \t %s\n", ambiental[i].matricula , ambiental[i].tipo_etiqueta );
+}
+getchar();
+ 
+ 
  
 /*
  for (i=1;i<=150;i++){
@@ -75,8 +100,8 @@ do{
  scanf("%d",&opcioninicio);
  
  system("cls");
- 
-    switch(opcioninicio) {
+     
+	switch(opcioninicio) {
      	case 1:
 			
 			/*for (parpadeo=220; parpadeo>=0;parpadeo--){
@@ -165,9 +190,9 @@ do{
                      		            }
                      		        else if (sicoincide!=0){                                           //cuando es igual a una matricula ya en el parking    
 		 				 			    system("color 0C");
-		                                gotoxy(24, 17); 
-		                                printf("El vehiculo ya esta en el parking");		    
-		                                Sleep(2000);           		         	
+			 							gotoxy(24, 17);
+									 	printf("El vehiculo ya esta en el parking");
+									 	Sleep(2000);           		         	
                     		         	repite3=true;                    			        
 					 					system("cls");
 					 					break;
@@ -179,7 +204,7 @@ do{
                     			     	Sleep(2000);
                     		         	repite3=true;
                     			     	system("cls");  
-										break;                    		         	
+		 								break;                    		         	
 					 				    }							    	
                      	    	}
                      		    while(repite4);
@@ -198,11 +223,11 @@ do{
                  		    }                			               			
 			 		    }
 			 		    else{
-					    	system("cls");
-					    	repite3=true;
+		 			    	system("cls");
+		 			    	repite3=true;
 			 			}              	               						               		
-				        break;
-			 	}
+			 	        break;
+			         	}
 			 	    case 2 :{
 			 	    	system("color 0E");
                  		fecha();
@@ -266,8 +291,8 @@ do{
                     			     	Sleep(2000);
                     		         	repite3=true;
                     			     	system("cls");  
-										break;                    		         	
-									    }							    	
+		 								break;                    		         	
+		 							    }							    	
                     	     	}
                     	 	    while(repite4);																			
 		 		        }
@@ -276,22 +301,19 @@ do{
 					    	repite3=true;
 		 				} 					    	
 	 					break;
-	 				}				    	
-		 		    case 4 :
+	 				    }				    	
+		 		    case 4 :{
                      	system("cls");
 			 			repite4=false;						 
                      	repite3=false;     //si no se pone no deja retroceder despues de haber entrado y retrocedido en en buble de repite3 ya que al salir se le asigna true
 			 			repite=true;   						
 		 				break;
-			 	}                                    
-            }
-            while(repite3);
-            
-            
-            
- 	    	
- 	     	    	
- 	    	break; 	    	
+		 			    }
+			     	}
+	 		}
+	 		while(repite3);                              	     	    	
+ 	    	break; 	  
+			   	
      	case 2:{
   		
 			 /*for (parpadeo=220; parpadeo>=0;parpadeo--){
@@ -335,137 +357,46 @@ do{
  	    				plazas_de_aparcamiento(parking,11,21); 
  	    				plazas_de_aparcamiento(parking,21,31); 
  	    				plazas_de_aparcamiento(parking,31,41); 
- 	    				plazas_de_aparcamiento(parking,41,51); 
- 	    				
-						                      
-                        getch();
-                        system("cls");
-                        repite2=true;                       
-                        break;
-                        }
-                    case 2:{
+ 	    				plazas_de_aparcamiento(parking,41,51);
+	 					getch();
+	 					system("cls");
+	 					repite2=true;
+	 					break;
+	 					}
+		 			case 2:{
                     	system("color 0E");
- 	    				printf("\n\n\t\t\t\t     PLANTA 2\n\n\n");
-                    	
+ 	    				printf("\n\n\t\t\t\t     PLANTA 2\n\n\n");                    	
                     	plazas_de_aparcamiento(parking,51,61); 
  	    				plazas_de_aparcamiento(parking,61,71); 
  	    				plazas_de_aparcamiento(parking,71,81); 
  	    				plazas_de_aparcamiento(parking,81,91); 
- 	    				plazas_de_aparcamiento(parking,91,101);
- 	    				
-					    getch();
-                        system("cls");
-                        repite2=true;                       
-                        break;
-                        }
-                    case 3: {												    				
+ 	    				plazas_de_aparcamiento(parking,91,101); 	    				
+	 				    getch();
+	 					system("cls");
+	 					repite2=true;
+	 					break;
+		 				}
+		 			case 3:{												    				
  	    				system("color 0E");
  	    				printf("\n\n\t\t\t\t     PLANTA 3\n\n\n");
- 	    					int k;
- 	    					k=0;
- 	    					plazas_de_aparcamiento(parking,101,111);  
- 	    					plazas_de_aparcamiento(parking,111,121);
- 	    					plazas_de_aparcamiento(parking,121,131);
- 	    					plazas_de_aparcamiento(parking,131,141);
- 	    					plazas_de_aparcamiento(parking,141,151);
-							 /*
-							 while(k<5){
-							 		
-							 for (i=1;i<=11;i++){
-							 
-						     	if(parking[i].estado_plaza==1 && i!=11){
-						     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
-						    	printf("|");
-						    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 200);
-						     	printf("       ");
-						     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);
-						        }
-							 	else if (parking[i].estado_plaza==0 && i!=11) {
-							 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
-						    	printf("|");
-						    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-						     	printf("       ");
-						     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
-								}
-								else if(i==11){								
-								printf("|\n");
-								k++;
-								
-							    break;
-						     	}
-					    	    }
-					        }
-					    	if (k==5){
-						        
-							    for (i=1;i<=9;i++){
-							    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
-						    	printf("|");	
-							    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-								printf("   %d   ",i);    				        		        
-		                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);		                       
-								}
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
-						    	printf("|");
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-								printf("   %d  ",10);
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
-						    	printf("|");
-							break;
-					}*/
-					
-					Sleep(8000);		    
-							    
-							    
-							    
-							    
-							    
-						/*	    
-							    
-						    }
-		                	printf("|\t");  //imprime barras			        	           
-		                    while   (k==55){               //fila numerica       DA EL LARGO DE LAS PLAZAS   55 DE COCHE		    		                	    
-				                    printf("|  %d\t",i);    				        
-		                        }
-		                        printf("|\n\n\n\n");
-		                        break; 
-			             	}		            
-		                    while   (k==110){               //fila numerica		       	    
-				              	printf("|  %d\t",i);    				        
-		                        }
-		                        printf("|\n\n\n\n");
-		                        break;   
-	                        }	           
-	                        while   (k==132){               //fila numerica       DA EL LARGO DE LAS PLAZAS   22 DE MOTO		       	    
-				            	printf("|  %d\t",i);    				        
-		                        }
-		                        printf("|\n\n\n\n");
-		                        break;   
-	                        }	           
-	                        while   (k==187){               //fila numerica		       	    
-				            	printf("|  %d\t",i);    				        
-		                        }
-		                        printf("|\n\n\n\n");
-		                        break;   
-	                        }
-	                        while   (k==242){               //fila numerica		       	    
-			 	        	    printf("|  %d\t",i);    				        
-		                        }
-		                        printf("|\n\n\n\n");
-		                        break;
- 	                        } 	                       
-                        }         */   
-						Sleep(8000);            
-                        getch();
-                        system("cls");
-                        repite2=true;                       
-                        break;    
-			        	}
-                    case 4 :{
-                    	system("cls");						 
-                    	repite2=false;     //si no se pone no deja retroceder despues de haber entrado y retrocedido en en buble de repite2 ya que al salir se le asigna true
-						repite=true;   						
-						break;	
-				    	}
+ 	    				int k;
+ 	    				k=0;
+ 	    				plazas_de_aparcamiento(parking,101,111);  
+ 	    				plazas_de_aparcamiento(parking,111,121);
+ 	    				plazas_de_aparcamiento(parking,121,131);
+ 	    				plazas_de_aparcamiento(parking,131,141);
+ 	    				plazas_de_aparcamiento(parking,141,151);
+	 					getch();
+	 					system("cls");
+	 					repite2=true;
+	 					break;    
+			         	}
+                    case 4:{
+                     	system("cls");						 
+                     	repite2=false;     //si no se pone no deja retroceder despues de haber entrado y retrocedido en en buble de repite2 ya que al salir se le asigna true
+		 				repite=true;   						
+		 				break;	
+		 		    	}
  	    			default:{					
 	                  	while (opcionplanta!=1 && opcionplanta!=2 ){
 	                  		fflush(stdin);   //funcion necesaria para que limpie el buffer y no se repita el default en bucle en caso de indexar una letra en vez de un numero distinto de 1 y 2
@@ -475,16 +406,18 @@ do{
 	     	                Sleep(1500);
 	     	                system("cls");
 	     	                repite2=true;
-			                break;						 	 			    	    		
+						 	break;						 	 			    	    		
 	 		                }
-                        }
-                    }
-            }
- 	    	while (repite2); 	    	
-            break;
-            }
-    	case 3:
-    		for (parpadeo=220; parpadeo>=0;parpadeo--){
+		 				}
+     				}
+	 		}
+ 	    	while (repite2);
+	 		break;
+	 		}
+	 		
+    	case 3:{
+			
+    		/*for (parpadeo=220; parpadeo>=0;parpadeo--){
 				
 			     gotoxy( 10, 22);
             
@@ -500,11 +433,11 @@ do{
                  Sleep(parpadeo);          // tiempo de parpadeo en funcion de la variable
             
                  parpadeo=((parpadeo-20)^(9/10))-12;    //funcion que incrementa la velocidad de parpadeo como en una parabola (el exponente aproximado a 1 hace que esta sea parabola sea menos pronunciada)
-            }
+            }*/
     		
  	    	printf("3 - Consultar tarifas\n");	
 		    break;	
-		    
+	    	}
     	default:
 	    	while (opcioninicio!=1 && opcioninicio!=2 && opcioninicio!=3){
 		    printf("Por favor, introduce una opcion valida: 1,2,3\n");
@@ -722,11 +655,11 @@ void plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta){
 	if (k==largodeplaza){
 						        
 							    for (i=desde;i<=hasta-1;i++){
-							    if(hasta<=9){ //espacios para las plazas del 1 al 9
-							    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+							    if(desde<=9){ //espacios para las plazas del 1 al 9
+							    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
 						    	printf("|");
 								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-								printf("    %d   ",i);
+								printf("   %d   ",i);
 								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
 						        
 							    	
@@ -747,10 +680,31 @@ void plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta){
 						        }
 						    	
 						    }
-						printf("\n\n\n\n");
+						printf("|\n\n\n\n");
 					}
 	
 }
+
+
+void leerDistintivo(char direccion2[],struct distintivo ambiental[]){
+	int i;
+	FILE*fp;
+	fp=fopen (direccion2,"r");
+	if (fp==NULL){
+        printf("Error al abrir el fichero\n");
+        return ; // Se termina el programa en este punto
+    } 
+ for (i=1;i<=5;i++){
+        fscanf(fp,"%s %s\n", &ambiental[i].matricula , &ambiental[i].tipo_etiqueta );
+    }
+    gotoxy( 25, 29);
+    printf("Distintivos ambientales   OK\n");
+    
+    
+    fclose(fp);
+}
+
+
 
 
 
@@ -766,8 +720,8 @@ void leerFichero(char direccion[],struct plaza parking[]) {
     for (i=1;i<=150;i++){
         fscanf(pf,"%d %d %c %d %s\n", &parking[i].numero_plaza, &parking[i].planta, &parking[i].tipo_plaza, &parking[i].estado_plaza, &parking[i].matricula);
     }
-    gotoxy( 31, 27);
-    printf("Datos cargados\n");
+    gotoxy( 25, 27);
+    printf("Estado del Parking        OK\n");
     
     
     fclose(pf);
