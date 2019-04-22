@@ -443,55 +443,95 @@ do{
                     case 3: {												    				
  	    				system("color 0E");
  	    				printf("\n\n\t\t\t\t     PLANTA 3\n\n\n");
- 	    				for (k=1;k<=242;k++){ //condicion para crear las plazas  LARGO DEL PARKING				
+ 	    					int k;
+ 	    					k=0;
+							 
+							 while(k<5){
+							 		
+							 for (i=1;i<=11;i++){
+							 
+						     	if(parking[i].estado_plaza==1 && i!=11){
+						     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+						    	printf("|");
+						    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 200);
+						     	printf("       ");
+						     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);
+						        }
+							 	else if (parking[i].estado_plaza==0 && i!=11) {
+							 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+						    	printf("|");
+						    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						     	printf("       ");
+						     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+								}
+								else if(i==11){								
+								printf("|\n");
+								k++;
+								
+							    break;
+						     	}
+					    	    }
+					        }
+					    	if (k==5){
+						        
+							    for (i=1;i<=9;i++){
+							    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+						    	printf("|");	
+							    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+								printf("   %d   ",i);    				        		        
+		                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);		                       
+								}
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+						    	printf("|");
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+								printf("   %d  ",10);
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+						    	printf("|");
+							break;
+					}
+					printf("|\n\n\n\n");
+					Sleep(8000);		    
+							    
+							    
+							    
+							    
+							    
+						/*	    
+							    
+						    }
 		                	printf("|\t");  //imprime barras			        	           
-		                    while   (k==55){               //fila numerica       DA EL LARGO DE LAS PLAZAS   55 DE COCHE		    
-		                	    i=10; //meter en el futuro el cuadrante a partir de la estructura		       	    
-	     	                    for (j=1;j<=10;j++){
-	     	                        m1[i][j]=i*10+j;
-				                    printf("|  %d\t",m1[i][j]);    				        
+		                    while   (k==55){               //fila numerica       DA EL LARGO DE LAS PLAZAS   55 DE COCHE		    		                	    
+				                    printf("|  %d\t",i);    				        
 		                        }
 		                        printf("|\n\n\n\n");
 		                        break; 
 			             	}		            
 		                    while   (k==110){               //fila numerica		       	    
-				              	i=11; //meter en el futuro el cuadrante a partir de la estructura					
-	     	                    for (j=1;j<=10;j++){
-
-	     	                        m1[i][j]=i*10+j;
-	     	                        printf("|  %d\t",m1[i][j]);
-				                }     		                        
+				              	printf("|  %d\t",i);    				        
+		                        }
 		                        printf("|\n\n\n\n");
 		                        break;   
 	                        }	           
 	                        while   (k==132){               //fila numerica       DA EL LARGO DE LAS PLAZAS   22 DE MOTO		       	    
-				            	i=12; //meter en el futuro el cuadrante a partir de la estructura					
-	     	                    for (j=1;j<=10;j++){
-	     	                        m1[i][j]=i*10+j;	     	                      	
-				                    printf("|  %d\t",m1[i][j]);				                     
+				            	printf("|  %d\t",i);    				        
 		                        }
 		                        printf("|\n\n\n\n");
 		                        break;   
 	                        }	           
 	                        while   (k==187){               //fila numerica		       	    
-				            	i=13; //meter en el futuro el cuadrante a partir de la estructura  					
-	     	                    for (j=1;j<=10;j++){      
-	     	                        m1[i][j]=i*10+j;             //numeracion de las plazaS	     	            					            	
-				                    printf("|  %d\t",m1[i][j]);				                       
+				            	printf("|  %d\t",i);    				        
 		                        }
 		                        printf("|\n\n\n\n");
 		                        break;   
 	                        }
 	                        while   (k==242){               //fila numerica		       	    
-			 	        	    i=14; //meter en el futuro el cuadrante a partir de la estructura  					
-	     	                    for (j=1;j<=10;j++){      
-	     	                        m1[i][j]=i*10+j;             //numeracion de las plazaS	     	            					        	    
-				                    printf("|  %d\t",m1[i][j]);				                       
+			 	        	    printf("|  %d\t",i);    				        
 		                        }
 		                        printf("|\n\n\n\n");
- 	                        	break;
+		                        break;
  	                        } 	                       
-                        }                        
+                        }         */   
+						Sleep(8000);            
                         getch();
                         system("cls");
                         repite2=true;                       
