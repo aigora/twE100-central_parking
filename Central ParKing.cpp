@@ -714,33 +714,42 @@ void leerDistintivo(char direccion2[],struct distintivo ambiental[]){
 int calculartarifa(struct plaza parking[],struct distintivo ambiental[],struct tipos_distintivo pegatinas, int sicoincide){
  	int i;
  	float precio;
- 	for (i=0;i<=257199;i++){
+ 	float a,b,c,d;
+ 	a=parking[sicoincide].min_salida;
+ 	b=parking[sicoincide].hora_salida;
+ 	c=parking[sicoincide].min_entrada;
+ 	d=parking[sicoincide].hora_entrada;
+ 	for (i=0;i<=20000;i++){
 	
- 	    if(parking[sicoincide].matricula==ambiental[i].matricula){
- 	    	/*
-	     	if(strcmp(ambiental[i].tipo_etiqueta,pegatinas.pegatina_cero)==0){
-	     		precio=(parking[sicoincide].min_salida - parking[sicoincide].min_entrada);
+ 	    if(strcmp(parking[sicoincide].matricula,ambiental[i].matricula)==0){
+ 	    	
+	     	if(ambiental[i].tipo_etiqueta==pegatinas.pegatina_cero){
+	     		precio=(a-b);
 	     		break;
  			}
- 			else if(strcmp(ambiental[i].tipo_etiqueta,pegatinas.pegatina_eco)==0){
- 				precio=(parking[sicoincide].min_salida - parking[sicoincide].min_entrada);;
+ 			else if(ambiental[i].tipo_etiqueta==pegatinas.pegatina_eco){
+ 				precio=(a-b);
  				break;
 	 		}
- 			else if(strcmp(ambiental[i].tipo_etiqueta,pegatinas.pegatina_c)==0){
- 				precio=(parking[sicoincide].min_salida - parking[sicoincide].min_entrada);
+ 			else if(ambiental[i].tipo_etiqueta==pegatinas.pegatina_c){
+ 				precio=(a-b);
  				break;
  			}
- 			else if(strcmp(ambiental[i].tipo_etiqueta,pegatinas.pegatina_b)==0){
- 				precio=(parking[sicoincide].min_salida - parking[sicoincide].min_entrada);
+ 			else if(ambiental[i].tipo_etiqueta==pegatinas.pegatina_b){
+ 				precio=(a-b);
  				break;
  			}			
- 		    else if(strcmp(ambiental[i].tipo_etiqueta,pegatinas.sin_pegatina)==0){
- 		    	precio=(parking[sicoincide].min_salida - parking[sicoincide].min_entrada);
+ 		    else if(ambiental[i].tipo_etiqueta==pegatinas.sin_pegatina){
+ 		    	precio=(a-b);
  		    	break;
- 			}*/
- 		precio=(parking[sicoincide].min_salida-parking[sicoincide].min_entrada);	
- 		}
+ 			}
+ 		break;
+    	}
+ 		else{
+ 			precio=1;
+		 }
  		
+ 	break;	
  	}
  	return precio;
 }
@@ -750,7 +759,7 @@ int calculartarifa(struct plaza parking[],struct distintivo ambiental[],struct t
 
 
 
-int exixte_la_matricula(struct plaza parking[],struct distintivo ambiental[],int plazaasignada){
+int exixte_la_matricula(struct plaza parking[],struct distintivo ambiental[],int plazaasignada){  //funciona pero al tener solo 20000 matriculas en la estructura podremos trabajar solo con las 20000 primeras del fichero
 int i,existe_la_matricula;
 for(i=0;i<=20000;i++){
 	if(strcmp(parking[plazaasignada].matricula,ambiental[i].matricula)==0){
@@ -766,17 +775,6 @@ for(i=0;i<=20000;i++){
    
 return existe_la_matricula;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 void leerFichero(char direccion[],struct plaza parking[]) {
  	int i;
