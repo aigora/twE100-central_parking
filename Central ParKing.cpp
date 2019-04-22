@@ -6,7 +6,7 @@
 #include <ctime>  //no hace falta creo
 #include <time.h>
 
-struct tipos_distintivo {
+struct tipos_distintivo { //no usado
 	char pegatina_cero;
 	char pegatina_eco;
 	char pegatina_c;
@@ -24,11 +24,11 @@ struct plaza {
 	int min_entrada;
 	int hora_salida;
 	int min_salida;
+	char etiqueta_medioambiental; //solo se usa a la hora de recoger el coche para construir el ticket a partir de la funcion que calcula el preecio
     };
     
 struct distintivo {
 	char matricula[8];
-	char tipo_vehiculo;
 	char tipo_etiqueta; //con otro numero no funciona
 };
 
@@ -40,8 +40,8 @@ int buscarPlazaLibre(struct plaza parking[],char tipovehiculo);
 void grafico_plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta); 
 void listado_plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta);
 void leerDistintivo(char direccion2[],struct distintivo ambiental[]);   
-int calculartarifa(struct plaza parking[],struct distintivo ambiental[],struct tipos_distintivo pegatinas, int sicoincide);
-int tipo_de_vehiculo (struct plaza parking[], struct distintivo ambiental[]);
+float calculartarifa(struct plaza parking[],struct distintivo ambiental[], int sicoincide);
+void ticket(struct plaza parking[], int sicoincide, float precio);
 void convertir_a_mayus (char matricula[]);
 int exixte_la_matricula(struct plaza parking[],struct distintivo ambiental[],int plazaasignada);
 
@@ -56,15 +56,15 @@ int main(){
 	
  system("mode con: cols=81 lines=55");  // establece el tamaño de pantalla
  int x,y;	
- int opcioninicio,parpadeo,opcionregistro,opcionplanta,plazaasignada,matriculavalida,intentos,sicoincide,existe,precio,tipovehiculo;
+ int opcioninicio,parpadeo,opcionregistro,opcionplanta,plazaasignada,matriculavalida,intentos,sicoincide,existe;
+ float precio;
  bool repite,repite2,repite3,repite4;     //establece la variable que permite repite la aparicion del menu con do en caso de defaul (digito no valido)
  int i,k,j;
  int m1 [15][15];	
-	// para el menu
+ char tipovehiculo;	// para el menu
  char direccion[] = "plazas.txt";
  char direccion2[] = "export_distintivo_ambiental.txt";
  char auxmatricula[7];
- 
  struct plaza parking[151];       // 150 de las plazas    la 0 de auxiliar y la sicoincide total 151
  struct distintivo ambiental[20000];
  struct tipos_distintivo pegatinas ={'O','E','C','B','S'};
@@ -146,30 +146,29 @@ do{
                  		fecha();
                  		gotoxy(0, 12);  
                  		printf("\t\t               1-DEJAR VEHICULO             \n\n");
-                 		printf("\t\t         Indique la matricula\n\n");
+                 		printf("\t\t         Indique el tipo de vehiculo\n\n");
                  		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-			 			
-                 		scanf("%s",&parking[0].matricula);
-                 		convertir_a_mayus (parking[0].matricula); 
-                 		tipovehiculo=tipo_de_vehiculo (parking,ambiental);
-                 		printf("%d",tipovehiculo);
-							     	Sleep(1000);
-                 		
-                 		if(tipovehiculo== 1 || tipovehiculo== 2){
+			 			printf("\t\t\t          C - Coche          \n\n");
+			 			printf("\t\t\t          M - Moto           \n\n");
+                 		fflush(stdin);
+                 		scanf("%c",&tipovehiculo);
+                 		if(tipovehiculo== 'C' || tipovehiculo== 'c' || tipovehiculo== 'M' || tipovehiculo== 'm'){
 		 				
-                 	
-                 		                                                                    // inicializa intentos con valor 0 para que si sales del menu vuelvas a tener 3 oportunidades cuenta regresiva
+                 		system("cls");
+                 		intentos=3;                                                                    // inicializa intentos con valor 0 para que si sales del menu vuelvas a tener 3 oportunidades cuenta regresiva
                  		plazaasignada=buscarPlazaLibre(parking,tipovehiculo);                          //funcion que busca una plaza en funcion de la ocupacion del parking y del tipo de vehiculo
                 	 		if (plazaasignada!=-1){
                 	 			do{
                 			     	system("color 0E");               				
                 			     	fecha();
-                    		     	
-                    		      	strcpy(parking[plazaasignada].matricula,parking[0].matricula);
+                    		     	gotoxy(23, 12);
+                    		     	printf("Indique la matricula de su vehiculo\n\n\t\t\t\t     ");
+                    			 
+                    		      	scanf("%s", parking[plazaasignada].matricula); 
                      			
 					 		        matriculavalida = esMatriculaValida(parking[plazaasignada].matricula);  // funcion que valida la matricula introducida
 					 		        
-					 		            //convierte a mayusculas
+					 		        convertir_a_mayus (parking[plazaasignada].matricula);     //convierte a mayusculas
 					 		        
 					 		        
 							     	sicoincide=coincide(parking,plazaasignada);                             // funcion de coincidencia con matricula ya registrada
@@ -177,7 +176,7 @@ do{
 							    /* 	printf("%d",existe);*/ //para probar
 							     	Sleep(1000);
 																								
-                     			    if ((matriculavalida == 0 && intentos<3 ) || (existe==0 && intentos>0) ){  	    	//cuando no es valida y quedan mas de 0 intentos (al menos 1)=llevas menos de 3 intentos 					    								              
+                     			    if ((matriculavalida == 0 && intentos>0 ) || (existe==0 && intentos>0) ){  	    	//cuando no es valida y quedan mas de 0 intentos (al menos 1)=llevas menos de 3 intentos 					    								              
 					 					system("color 0C");  //texto se vuelve rojo			
 					 					gotoxy(25, 17); 
                     			     	printf("La matricula no es valida\n\n\t\t\t Intentelo de nuevo %d \n",intentos);
@@ -187,7 +186,7 @@ do{
                     			     	intentos--;
                     			     	/*break;*/ //no lo ponemos para uqe no cierre el bucle do while
 					 				    }
-                     			    else if (matriculavalida ==1 && intentos<3 && sicoincide==0 && existe==1){	   //cuando es valida y quedan mas de 0 intentos (al menos 1)=llevas menos de 3 intentos y es distinta de las que ya estan en el parking(no coincide)						 
+                     			    else if (matriculavalida ==1 && intentos>0 && sicoincide==0 && existe==1){	   //cuando es valida y quedan mas de 0 intentos (al menos 1)=llevas menos de 3 intentos y es distinta de las que ya estan en el parking(no coincide)						 
                      			        parking[plazaasignada].estado_plaza=1;                         //asigna un 1(ocupada) a la plaza asignada
                      			        parking[plazaasignada].hora_entrada=today.tm_hour;                   //coge fecha actual para la plaza asignada
                      			        parking[plazaasignada].min_entrada=today.tm_min;
@@ -211,7 +210,7 @@ do{
 					 					system("cls");
 					 					break;
 						 	    		}
-                     		        else if (intentos>2){                                              //cuando no te quedan intentos
+                     		        else if (intentos<1){                                              //cuando no te quedan intentos
                     		         	system("color 0C");
                     		         	gotoxy(24, 17); 
                     			     	printf("Se ha quedado sin intentos\n");
@@ -272,26 +271,18 @@ do{
                     			/*break;*/ //no lo ponemos para uqe no cierre el bucle do while
 					 		}
                      		else if (matriculavalida ==1 && intentos>0 && sicoincide!=0  ){	   //cuando es invalida o mas de 3 intentos	
-                     			for(i=0;i<=7;i++){                                          //escribe guiones para la matricula vacia
-                     			    if(i!=7){
-                    	 		       	parking[sicoincide].matricula[i] = '-';                    			        		
-							 		}
-                     			    else {
-				 					parking[sicoincide].matricula[i] = 0 ;
-							 			}                    			        	
-							 	}	
-								printf("%s\n %s",parking[sicoincide].matricula,ambiental[i].matricula);														 
+                     				
+								printf("%s",parking[sicoincide].matricula);														 
                     	 	    parking[sicoincide].estado_plaza=0;                         //asigna un 1(ocupada) a la plaza en la que coincide con la 0 que es la auxiliar
                     	 		parking[sicoincide].hora_salida=today.tm_hour;                   //coge fecha actual para a plaza en la que coincide con la 0 que es la auxiliar
                     	 		parking[sicoincide].min_salida=today.tm_min;
                     	 		
 						 		gotoxy(24, 17);     
 									 
-		 						precio=calculartarifa(parking,ambiental,pegatinas,sicoincide); 
+		 						precio=calculartarifa(parking,ambiental,sicoincide); 
 		 						system("cls");
-		 						printf("%d %d %d %d\n",parking[sicoincide].hora_entrada,parking[sicoincide].hora_salida,parking[sicoincide].min_entrada,parking[sicoincide].min_salida);
-		 						printf("%d",precio); 
-		 						Sleep(10000); 
+		 						
+		 						ticket(parking,sicoincide,precio);
 		 						
 										 										 
 		 						if(parking[sicoincide].tipo_plaza='C') {
@@ -304,6 +295,14 @@ do{
                     	 		Sleep(2000);
                     	 		parking[sicoincide].hora_entrada=0;
                     	 		parking[sicoincide].min_entrada=0;
+                    	 		for(i=0;i<=7;i++){                                          //escribe guiones para la matricula vacia
+                     			    if(i!=7){
+                    	 		       	parking[sicoincide].matricula[i] = '-';                    			        		
+							 		}
+                     			    else {
+				 					parking[sicoincide].matricula[i] = 0 ;
+							 			}                    			        	
+							 	}
                     	 		salvarFichero(direccion,parking);                              //guarda en el fichero los cambios
                     	 		repite3=true;                    			        
 						 		system("cls");
@@ -638,11 +637,9 @@ void grafico_plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta){
  	k=0;
  	if(parking[desde].tipo_plaza=='C'){
  		largodeplaza=5;                        //con el valor de 5 imprime de largo 5 caracteres usadas para el coche y 3 para moto
- 		break;
  	}
  	else if (parking[desde].tipo_plaza=='M'){
  		largodeplaza=3;
- 		break;
  	}	
  	while(k<largodeplaza){
 							 		
@@ -697,11 +694,11 @@ void listado_plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta){
  	for (i=desde;i<=hasta;i++){ 
      	if(parking[i].estado_plaza==0){						
      	    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-		 	printf("    %3d          %d            %c            %d         %s         %0.f:%2.f    \n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada,parking[i].min_entrada);							
+		 	printf("    %3d          %d            %c            %d         %s         %02d:%02d    \n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada,parking[i].min_entrada);							
 	 	}
  		if(parking[i].estado_plaza==1){
  			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 207);
-           	printf("    %3d          %d            %c            %d         %s         %0.f:%2.f    \n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada,parking[i].min_entrada);
+           	printf("    %3d          %d            %c            %d         %s         %02d:%02d    \n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada,parking[i].min_entrada);
      	}
  	}
 }
@@ -716,7 +713,7 @@ void leerDistintivo(char direccion2[],struct distintivo ambiental[]){
   		return ; // Se termina el programa en este punto
  		}
  	for (i=1;i<=20000;i++){
- 	    fscanf(fp,"%s %c %c\n", &ambiental[i].matricula ,&ambiental[i].tipo_vehiculo, &ambiental[i].tipo_etiqueta );
+ 	    fscanf(fp,"%s %c\n", &ambiental[i].matricula , &ambiental[i].tipo_etiqueta );
  		}
  	gotoxy( 25, 29);
  	printf("Distintivos ambientales   OK\n");
@@ -725,7 +722,7 @@ void leerDistintivo(char direccion2[],struct distintivo ambiental[]){
  //dentro de recoger coche si la operacion es corecta se despliega automaticamente el ticket
 
 
-int calculartarifa(struct plaza parking[],struct distintivo ambiental[],struct tipos_distintivo pegatinas, int sicoincide){
+float calculartarifa(struct plaza parking[],struct distintivo ambiental[], int sicoincide){
  	int i;
  	float precio;
  	float a,b,c,d;
@@ -739,57 +736,156 @@ int calculartarifa(struct plaza parking[],struct distintivo ambiental[],struct t
  	    	
  	    	
  	    	
-	     	if(ambiental[i].tipo_etiqueta==pegatinas.pegatina_cero){
-	     		precio=(a-b);
-	     		break;
+	     	if(ambiental[i].tipo_etiqueta=='O'){
+	     		printf("La etiqueta de vehiculo es : Cero emisiones ");
+	     		parking[sicoincide].etiqueta_medioambiental='O';
+	     		Sleep(4000);
+	     		if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
+ 		    	precio=(a-c)*0.04+((b-d)*60)*0.04;
+ 	        	}
+ 	        	else if(a<c){
+ 	        	precio=	((60-c)+a)*0.04+(((b-d)-1)*60)*0.04;                                                 //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
+				 }
+ 		    	break;
  			}
- 			else if(ambiental[i].tipo_etiqueta==pegatinas.pegatina_eco){
- 				precio=(a-b);
- 				break;
+ 			else if(ambiental[i].tipo_etiqueta=='E'){
+ 				printf("La etiqueta de vehiculo es : Eco ");
+ 				parking[sicoincide].etiqueta_medioambiental='E';
+ 				Sleep(4000);
+ 				if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
+ 		    	precio=((a-c)*0.04+((b-d)*60)*0.04)+((a-c)*0.04+(b-d)*60)*0.05;
+ 	        	}
+ 	        	else if(a<c){
+ 	        	precio=	(((60-c)+a)*0.04+(((b-d)-1)*60)*0.04)+(((60-c)+a)*0.04+(((b-d)-1)*60)*0.04)*0.05;    //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
+				 }
+ 		    	break;
 	 		}
- 			else if(ambiental[i].tipo_etiqueta==pegatinas.pegatina_c){
- 				precio=(a-b);
- 				break;
+ 			else if(ambiental[i].tipo_etiqueta=='C'){
+ 				printf("La etiqueta de vehiculo es : C ");
+ 				parking[sicoincide].etiqueta_medioambiental='C';
+ 				Sleep(4000);
+ 				if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
+ 		    	precio=((a-c)*0.04+((b-d)*60)*0.04)+((a-c)*0.04+(b-d)*60)*0.10;
+ 	        	}
+ 	        	else if(a<c){
+ 	        	precio=	(((60-c)+a)*0.04+(((b-d)-1)*60)*0.04)+(((60-c)+a)*0.04+(((b-d)-1)*60)*0.04)*0.10;    //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
+				 }
+ 		    	break;
  			}
- 			else if(ambiental[i].tipo_etiqueta==pegatinas.pegatina_b){
- 				precio=(a-b);
- 				break;
+ 			else if(ambiental[i].tipo_etiqueta=='B'){
+ 				printf("La etiqueta de vehiculo es : B ");
+ 				parking[sicoincide].etiqueta_medioambiental='B';
+ 				if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
+ 		    	precio=((a-c)*0.04+((b-d)*60)*0.04)+((a-c)*0.04+(b-d)*60)*0.15;
+ 	        	}
+ 	        	else if(a<c){
+ 	        	precio=	(((60-c)+a)*0.04+(((b-d)-1)*60)*0.04)+(((60-c)+a)*0.04+(((b-d)-1)*60)*0.04)*0.15;    //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
+				 }
+ 		    	break;
  			}			
- 		    else if(ambiental[i].tipo_etiqueta==pegatinas.sin_pegatina){
- 		    	precio=(a-b);
+ 		    else if(ambiental[i].tipo_etiqueta=='S'){
+ 		    	printf("Su vehiculo no dispone de etiqueta medioambiental");
+ 		    	parking[sicoincide].etiqueta_medioambiental='S';
+ 		    	Sleep(4000);
+ 		    	if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
+ 		    	precio=((a-c)*0.04+((b-d)*60)*0.04)+((a-c)*0.04+(b-d)*60)*0.20;
+ 	        	}
+ 	        	else if(a<c){
+ 	        	precio=	(((60-c)+a)*0.04+(((b-d)-1)*60)*0.04)+(((60-c)+a)*0.04+(((b-d)-1)*60)*0.04)*0.20;    //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
+				 }
  		    	break;
  			}
  		
     	}
  		else{
- 			precio=1;
+ 			precio=0;
 		 }
- 		
- 	break;	
+ 			
  	}
  	return precio;
 }
-int tipo_de_vehiculo (struct plaza parking[], struct distintivo ambiental[]){
-	int i;
-	int tipovehiculo;
-for(i=0;i<=20000;i++){
-	if (strcmp(parking[0].matricula,ambiental[i].matricula)==0){
-	
-	 if(ambiental[i].tipo_vehiculo== 'M'){
-	 
-	 tipovehiculo=2;
-	 break;
-     }
-     if(ambiental[i].tipo_vehiculo== 'T'){
-	 
-	 tipovehiculo=1;
-	 break;
-     }
-     }
-     return tipovehiculo;
 
+void ticket(struct plaza parking[], int sicoincide, float precio){
+	system("color 0E");
+	
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+	gotoxy( 25, 28);
+	printf("Central Parking");
+	gotoxy( 28, 28);
+	fecha();
+	gotoxy( 15, 11);
+	printf("***************************************************");
+	gotoxy( 15, 12);
+	printf("*                                                 *");
+	gotoxy( 15, 13);
+	printf("*                                                 *");
+	gotoxy( 15, 14);
+	printf("*                 Central Parking                 *");
+	gotoxy( 15, 15);
+	printf("*                                                 *");
+	gotoxy( 15, 16);
+	printf("*                                                 *");
+	gotoxy( 15, 17);
+	printf("*                                                 *");
+	
+	gotoxy( 15, 18);
+	printf("*      Matricula:                    %s      *", parking[sicoincide].matricula);
+	gotoxy( 15, 19);
+	printf("*                                                 *");
+	gotoxy( 15, 20);
+	printf("*      Tipo de vehiculo:                   %c      *", parking[sicoincide].tipo_plaza);
+	gotoxy( 15, 21);
+	printf("*                                                 *");
+	gotoxy( 15, 22);
+	printf("*      Etiqueta medioambiental:            %c      *", parking[sicoincide].etiqueta_medioambiental);
+	gotoxy( 15, 23);
+	printf("*                                                 *");
+	gotoxy( 15, 24);
+	printf("*      Entrada (h/min):               %d:%02d       *", parking[sicoincide].hora_entrada,parking[sicoincide].min_entrada);
+	gotoxy( 15, 25);
+	printf("*                                                 *");
+	gotoxy( 15, 26);
+	printf("*      Salida (h/min):                %d:%02d       *", parking[sicoincide].hora_salida,parking[sicoincide].min_salida);
+	gotoxy( 15, 27);
+	printf("*                                                 *");
+	gotoxy( 15, 28);
+	printf("*                                                 *");
+	gotoxy( 15, 29);
+	printf("*                                                 *");
+	gotoxy( 15, 30);
+	printf("*      Importe total (euros):          %0.2f       *", precio);
+	gotoxy( 15, 31);
+	printf("*                                                 *");
+	gotoxy( 15, 32);
+	printf("*                                                 *");
+	gotoxy( 15, 33);
+	printf("*                                                 *");
+	gotoxy( 15, 34);
+	printf("*                                                 *");
+	gotoxy( 15, 35);
+	printf("*                                                 *");
+	gotoxy( 15, 36);
+	printf("*       Hasta pronto. Gracias por su visita.      *");
+	gotoxy( 15, 37);
+	printf("*                                                 *");
+	gotoxy( 15, 38);
+	printf("*                                                 *");
+	gotoxy( 15, 39);
+	printf("***************************************************");
+	gotoxy( 15, 50);
+	printf("             Pulse una tecla para salir            ");
+	getch();
+	
 }
-}
+
+
+
+
+
+
+
+
+
 
 void convertir_a_mayus (char matricula[]){
 	int i;
@@ -829,7 +925,7 @@ void leerFichero(char direccion[],struct plaza parking[]) {
  		return ; // Se termina el programa en este punto
   	}
  	for (i=1;i<=150;i++){
- 	    fscanf(pf,"%d %d %c %d %s %d %d\n", &parking[i].numero_plaza, &parking[i].planta, &parking[i].tipo_plaza, &parking[i].estado_plaza, &parking[i].matricula,&parking[i].hora_entrada, &parking[i].min_entrada);
+ 	    fscanf(pf,"%d %d %c %d %s %2d %2d\n", &parking[i].numero_plaza, &parking[i].planta, &parking[i].tipo_plaza, &parking[i].estado_plaza, &parking[i].matricula,&parking[i].hora_entrada, &parking[i].min_entrada);
   	}
  	gotoxy( 25, 27);
   	printf("Estado del Parking        OK\n");
@@ -845,7 +941,7 @@ void salvarFichero(char direccion[],struct plaza parking[]) {
  		return ; // Se termina el programa en este punto
  	}
  	for (i=1;i<=150;i++){
- 	    fprintf(pf,"%d %d %c %d %s %d %d\n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada, parking[i].min_entrada);
+ 	    fprintf(pf,"%d %d %c %d %s %2d %2d\n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada, parking[i].min_entrada);
  	}
  	fclose(pf);
 }
