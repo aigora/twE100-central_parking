@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <windows.h> 
 #include <conio.h>  //para usar gotoxy e imprimir por coordenadas
-#include <ctime>
+#include <ctime>  //no hace falta creo
+#include <time.h>
 
 struct tipos_distintivo {
 	char pegatina_cero[1];
@@ -20,7 +21,9 @@ struct plaza {
 	int estado_plaza; 
 	char matricula[7]; 
 	float hora_entrada;
+	float min_entrada;
 	float hora_salida;
+	float min_salida;
     };
     
 struct distintivo {
@@ -60,6 +63,8 @@ int main(){
  struct plaza parking[151];       // 150 de las plazas    la 0 de auxiliar y la sicoincide total 151
  struct distintivo ambiental[257199];
  struct tipos_distintivo pegatinas ={'O','E','C','B','S'};
+ time_t t=time(NULL);
+ struct tm today = *localtime(&t);
  int nplazas=150; // NO UTIL DE MOMENTO
  gotoxy( 25, 20); 
  printf("Bienvenido a Central Parking\n");
@@ -100,12 +105,12 @@ do{
  fecha();
  gotoxy( 22, 10);
  
- printf("\t           INICIO\n");
- printf("\t         Escoja entre una de las siguientes opciones:\n");
+ printf("\t           INICIO\n\n");
+ printf("\t         Escoja entre una de las siguientes opciones:\n\n");
  SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
- printf("\t\t       1 - Registrar Entrada o Salida         \n");	
- printf("\t\t       2 - Consultar estado del Parking       \n");
- printf("\t\t       3 - Consultar tarifas                  \n");
+ printf("\t\t       1 - Registrar Entrada o Salida         \n\n");	
+ printf("\t\t       2 - Consultar estado del Parking       \n\n");
+ printf("\t\t       3 - Consultar tarifas                  \n\n");
 
  scanf("%d",&opcioninicio);
  
@@ -189,7 +194,8 @@ do{
 					 				    }
                      			    else if ((matriculavalida ==1 || matriculavalida==2) && intentos>0 && sicoincide==0){	   //cuando es valida y quedan mas de 0 intentos (al menos 1)=llevas menos de 3 intentos y es distinta de las que ya estan en el parking(no coincide)						 
                      			        parking[plazaasignada].estado_plaza=1;                         //asigna un 1(ocupada) a la plaza asignada
-                     			        parking[plazaasignada].hora_entrada=fecha();                   //coge fecha actual para la plaza asignada
+                     			        parking[plazaasignada].hora_entrada=today.tm_hour;                   //coge fecha actual para la plaza asignada
+                     			        parking[plazaasignada].min_entrada=today.tm_min;
 					   					gotoxy(24, 17);                  			
                      			        printf("Vehiculo aparcado correctamente\n");
                      			        Sleep(2000);
@@ -364,12 +370,17 @@ do{
     		
  	    	do{
  	    		system("color 0E");
- 	    		gotoxy(23, 13);     
+ 	    		gotoxy(22, 13);     
  	    	    printf("2 - CONSULTAR ESTADO DEL PARKING\n\n");
  	    	    Sleep(500);
- 	    		printf("\t      Seleccione el numero de planta sotano a consultar\n\n");
+ 	    		printf("\t          Grafico: Seleccione el numero de planta.\n\n");
  	    		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
- 	    		printf("\t\t          1          2          3          ");
+ 	    		printf("\t\t          1          2          3          \n\n\n");
+ 	    		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+ 	    		printf("\t    Listado: Seleccione el numero de planta equivalente.\n\n");
+ 	    		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+ 	    		printf("\t\t         11         12         13          ");
+ 	    		
  	    		gotoxy(32, 52);
  	    		printf("4 - Volver\n");
  	    		scanf ("%d",&opcionplanta);
@@ -404,9 +415,7 @@ do{
 		 				}
 		 			case 3:{												    				
  	    				system("color 0E");
- 	    				printf("\n\n\t\t\t\t     PLANTA 3\n\n\n");
- 	    				int k;
- 	    				k=0;
+ 	    				printf("\n\n\t\t\t\t     PLANTA 3\n\n\n"); 	    			
  	    				plazas_de_aparcamiento(parking,101,111);  
  	    				plazas_de_aparcamiento(parking,111,121);
  	    				plazas_de_aparcamiento(parking,121,131);
@@ -423,19 +432,73 @@ do{
 		 				repite=true;   						
 		 				break;	
 		 		    	}
+		 		    case 11:{
+		 		    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 31);
+		 		    	printf("\n\n   N Plaza     Planta     Tipo Plaza     Estado     Matricula     Hora entrada   \n\n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada);
+		 		    	for (i=1;i<=50;i++){ 
+					     	if(parking[i].estado_plaza==0){						
+				         		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+					     		printf("     %2d          %d            %c            %d        %s       %0.f:%0.f    \n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada,parking[i].min_entrada);							
+				     		}
+				     		if(parking[i].estado_plaza==1){
+							    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 207);
+                             	printf("     %2d          %d            %c            %d        %s       %0.f:%0.f    \n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada,parking[i].min_entrada);
+				         	}
+	 					}
+	 					getch();
+	 					system("cls");
+	 					repite2=true;
+	 					break;						 	
+		 		    	}
+		 		    case 12:{
+		 		    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 31);
+		 		    	printf("\n\n   N Plaza     Planta     Tipo Plaza     Estado     Matricula     Hora entrada   \n\n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada);
+		 		    	for (i=51;i<=100;i++){ 
+					     	if(parking[i].estado_plaza==0){						
+				         		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+					     		printf("     %2d          %d            %c            %d        %s       %0.f:%0.f    \n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada,parking[i].min_entrada);							
+				     		}
+				     		if(parking[i].estado_plaza==1){
+							    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 207);
+                             	printf("     %2d          %d            %c            %d        %s       %0.f:%0.f    \n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada,parking[i].min_entrada);
+				         	}
+	 					}
+	 					getch();
+	 					system("cls");
+	 					repite2=true;
+	 					break;						 	
+		 		    	}
+					case 13:{
+		 		    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 31);
+		 		    	printf("\n\n   N Plaza     Planta     Tipo Plaza     Estado     Matricula     Hora entrada   \n\n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada);
+		 		    	for (i=101;i<=150;i++){ 
+					     	if(parking[i].estado_plaza==0){						
+				         		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+					     		printf("     %2d          %d            %c            %d        %s       %0.f:%0.f    \n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada,parking[i].min_entrada);							
+				     		}
+				     		if(parking[i].estado_plaza==1){
+							    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 207);
+                             	printf("     %2d          %d            %c            %d        %s       %0.f:%0.f    \n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula,parking[i].hora_entrada,parking[i].min_entrada);
+				         	}
+	 					}
+	 					getch();
+	 					system("cls");
+	 					repite2=true;
+	 					break;						 	
+		 		    	}	 							 	
  	    			default:{					
 	                  	while (opcionplanta!=1 && opcionplanta!=2 ){
 	                  		fflush(stdin);   //funcion necesaria para que limpie el buffer y no se repita el default en bucle en caso de indexar una letra en vez de un numero distinto de 1 y 2
 	                  		system("cls");
 	                  		gotoxy( 20, 20);
-		                    printf("Por favor, introduce una opcion valida: 1,2\n");
+		                    printf("Por favor, introduce una opcion valida\n");
 	     	                Sleep(1500);
 	     	                system("cls");
 	     	                repite2=true;
 						 	break;						 	 			    	    		
 	 		                }
 		 				}
-     				}
+     				}	
 	 		}
  	    	while (repite2);
 	 		break;
@@ -662,85 +725,52 @@ void plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta){
 	
 	while(k<largodeplaza){
 							 		
-							 for (i=desde;i<=hasta;i++){
+							 for (i=desde;i<=hasta;i++){                                             //bucle para "dibujar" las plazas por bloques segun el tipo
 							 
-						     	if(parking[i].estado_plaza==1 && i!=hasta){
-						     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
-						    	printf("|");
-						    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 200);
-						     	printf("       ");
-						     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);
+						     	if(parking[i].estado_plaza==1 && i!=hasta){                           //dibuja las ocupadas
+						         	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+						        	printf("|");
+						        	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 200);
+						        	printf("       ");
+						        	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);
 						        }
-							 	else if (parking[i].estado_plaza==0 && i!=hasta) {
-							 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
-						    	printf("|");
-						    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-						     	printf("       ");
-						     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+							 	else if (parking[i].estado_plaza==0 && i!=hasta) {                    //dibuja las libres
+							     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+						        	printf("|");
+						        	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						         	printf("       ");
+						        	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
 								}
 								else if(i==hasta){								
-								printf("|\n");
-								k++;
-								
-							    break;
+							     	printf("|\n");
+							    	k++;								
+						    	    break;
 						     	}
 					    	    }
 					        }
 	if (k==largodeplaza){
 						        
 			 				    for (i=desde;i<=hasta-1;i++){
-			 				    if(desde<=10){ //espacios para las plazas del 1 al 9
-			 	    			    if(i==hasta-1){
-			 				    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
-			 	    		    	printf("|");
-			 			        	if(parking[i].estado_plaza==1 && i!=hasta){
-			 	    				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 200);
-			 	    				printf("  %d   ",i);
-					 	        	}
-			 			        	if(parking[i].estado_plaza==0 && i!=hasta){
-			 			    		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-			 			    		printf("  %d   ",i);
-			 			    		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);							
-						         	}
-				 				}
-							    
-							    else {
-								
-							    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
-						    	printf("|");
-						    	if(parking[i].estado_plaza==1 && i!=hasta){
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 200);
-								printf("   %d   ",i);
-						      	}
-						      	if(parking[i].estado_plaza==0 && i!=hasta){
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-								printf("   %d   ",i);
-						      	}
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
-						        
-							    }	
-								}	 
-								                     
-								else if(parking[desde].planta==1 || parking[desde].planta==2){					
+			 		
 								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
 						    	printf("|");
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-								printf("   %d  ",i);
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
-						        }
-						        else if(parking[desde].planta==3){					            // condiciones distintas para las plantas ya que al variar de 2 a 3 digitos descuadra los numeros de las plazas
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
-						    	printf("|");
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-								printf("  %d  ",i);                                             //un espacio menos precede al numero de plaza
+						    		
+						         	if(parking[i].estado_plaza==1 && i!=hasta){                           
+			 	    			        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 207);    //ocupadas    207 letra blanca 
+			 	    			        printf("  %3d  ",i);
+					 	            	}
+			 			            if(parking[i].estado_plaza==0 && i!=hasta){
+			 			    	        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);     //libres
+			 			        	    printf("  %3d  ",i);		 			                           //un espacio menos precede al numero de plaza   	    								
+						            	}                                           
 								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
 						        }
 						    	
-						    }
-						printf("|\n\n\n\n");
-					}
-	
+	}
+	printf("|\n\n\n\n");
 }
+	
+
 
 
 void leerDistintivo(char direccion2[],struct plaza parking[],struct distintivo ambiental[]){
