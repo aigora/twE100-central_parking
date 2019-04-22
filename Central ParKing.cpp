@@ -17,7 +17,7 @@ struct plaza {
 	int hora_salida;
     };
 
-  
+int coincide(struct plaza parking[],int plazaasignada);    
 int esDigitoValido(char caracter);    
 int esLetraValida(char caracter);
 int esMatriculaValida(char matricula[]);
@@ -33,7 +33,7 @@ int main(){
 	
  system("mode con: cols=81 lines=55");  // establece el tamaño de pantalla
  int x,y;	
- int opcioninicio,parpadeo,opcionregistro,opcionplanta,plazaasignada,matriculavalida,intentos,coincide;
+ int opcioninicio,parpadeo,opcionregistro,opcionplanta,plazaasignada,matriculavalida,intentos,sicoincide;
  bool repite,repite2,repite3,repite4;     //establece la variable que permite repite la aparicion del menu con do en caso de defaul (digito no valido)
  int i,k,j;
  int m1 [15][15];	
@@ -134,30 +134,14 @@ do{
                 				fecha();
                     			gotoxy(23, 12);
                     			printf("Indique la matricula de su vehiculo\n\n\t\t\t\t     ");
-                    			scanf("%8s", parking[plazaasignada].matricula,7); //el 7 y 8 indican el maximo y el minimo
-							    matriculavalida = esMatriculaValida(parking[plazaasignada].matricula);
-								i=1;
-								coincide=0;
-								while(i<150 && i !=plazaasignada){																	
-									   if  (strcmp(parking[i].matricula,parking[plazaasignada].matricula)==0){									
-									   coincide=1;
-									   printf("Indi %s      %s",parking[i].matricula,parking[plazaasignada].matricula); ////////////asi siempre coincide porque la plazaasignada tambien la cuenta entre 0 y 150 al recorrerla la i ////recurso para comprobar el funcionamiento (con esto se ve como siempre coincidia)
-									   	Sleep(4000);
-									   fflush(stdin);
-		                               break;
-	                              	   }
-	                            	   else {		
-	                        	       coincide=0;
-		                               i++;
-	                             	   }	   								 
-							    	
-							    	
-						    	}
-								system("cls");						
-								printf("kkkkk %d",coincide);
-								Sleep(4000);
-									
-                    			     if ((matriculavalida == 0 && intentos>0) || coincide==1){  		//	cuando es validay llevas menos de 3 intentos	o ya hay una matricula igual registrada					    								              
+                    			
+                    			scanf("%s", parking[plazaasignada].matricula); //el 7 y 8 indican el maximo y el minimo
+                    			
+							    matriculavalida = esMatriculaValida(parking[plazaasignada].matricula);// funcion de coincidencia con matricula ya registrada
+								sicoincide=coincide(parking,plazaasignada);
+								
+																
+                    			     if (matriculavalida == 0 && intentos>0 && sicoincide==0){  		//	cuando es validay llevas menos de 3 intentos	o ya hay una matricula igual registrada					    								              
 										system("color 0C");  //texto se vuelve rojo			
 										gotoxy(25, 17); 
                     			     	printf("La matricula no es valida\n\n\t\t\t Intentelo de nuevo %d \n",intentos);
@@ -167,7 +151,7 @@ do{
                     			     	intentos--;
                     			     	/*break;*/ //no lo ponemos para uqe no cierre el bucle do while
 									    }
-                    			     else if (matriculavalida ==1 && intentos>0 && coincide==0){		//cuando es invalida o mas de 3 intentos							 
+                    			     else if (matriculavalida ==1 && intentos>0 && sicoincide==0){		//cuando es invalida o mas de 3 intentos							 
                     			        parking[plazaasignada].estado_plaza=1;
                     			        parking[plazaasignada].hora_entrada=fecha(); 
 										gotoxy(24, 17);                  			
@@ -179,6 +163,12 @@ do{
 										system("cls");
 										break;  	//necesario									   										               			                                        			
                     		            }
+                    		         else if (sicoincide==1){
+                    		         	
+                    		         	repite3=true;                    			        
+										system("cls");
+										break;
+							    		}
                     		         else if (intentos<1){
                     		         	system("color 0C");
                     		         	gotoxy(24, 17); 
@@ -503,9 +493,27 @@ while (repite);
 return 0 ;
  
 }
-
+int coincide(struct plaza parking[], int plazaasignada){
+	int i,coincide;		
+	coincide=0;
+	while(i<150 && i!=plazaasignada){
 	
-
+		
+		if( strcmp(parking[i].matricula,parking[plazaasignada].matricula)==0){		
+		    coincide=1;
+		    system("color 0C");
+		    gotoxy(24, 17); 
+		    printf("El vehiculo ya esta en el parking");		    
+		    Sleep(2000);
+		    break;
+	    }			
+    	else{
+ 	    	coincide=0;
+ 	    	i++;
+    	}  
+}
+	return coincide;
+}	
 int buscarPlazaLibre(struct plaza parking[],char tipovehiculo) {
 	char direccion[]= "plazas.txt";
 	leerFichero(direccion,parking); //necesitamos que lea de nuevo el fichero para acctualizar la informacion de cuantos coches hay en cada planta y que sirva la comparacion si no se quedaria con la informacion previa a asignar la plaza y siempre la asignaria en la misma planta
@@ -514,25 +522,25 @@ int buscarPlazaLibre(struct plaza parking[],char tipovehiculo) {
 	int j,k,l;
 	int libre1,libre2,libre3;
 	int plazalibre=-1;
+	j=0;
+	k=0;
+	l=0;
 	for (i=0;i<=150;i++) {
-		if (parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32 ) { //-32 por si se digita en tipovehiculo una c para que sea igual que C
-			while (parking[i].estado_plaza == 0 && parking[i].planta == 1) {
-				j++;
-				
+		if ((parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32) && (parking[i].estado_plaza == 0 && parking[i].planta == 1)) { //-32 por si se digita en tipovehiculo una c para que sea igual que C			
+			j+=1;
+							
 			}
-			while (parking[i].estado_plaza == 0 && parking[i].planta == 2){
-				k++;
-								
-			}
-			while (parking[i].estado_plaza == 0 && parking[i].planta == 3){
-				l++;
-				
-		    }
-		break;    
-		
-	    }
-	   
-	    }
+		else if ((parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32) && (parking[i].estado_plaza == 0 && parking[i].planta == 2)){
+			k+=1;
+			
+	    	}
+		else if ((parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32) && (parking[i].estado_plaza == 0 && parking[i].planta == 3)){	
+			l+=1;
+			
+    	}
+	}///si no funciona hacer el bucle for por plantas de 1 a 50  50 100  100 150
+	    
+	   	    
 	if (j<k && j<l){////compara las tres plantas para asignar la plaza a la que menos coches tenga
 	    for (i=0;i<=150;i++){
 	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 1){
@@ -589,7 +597,7 @@ int buscarPlazaLibre(struct plaza parking[],char tipovehiculo) {
 	}
 	else if (l>j && j==k){
 		for (i=0;i<=150;i++){
-	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 1){
+	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 3){
 	    		plazalibre=i;
 	    		break;
 			}
@@ -597,8 +605,7 @@ int buscarPlazaLibre(struct plaza parking[],char tipovehiculo) {
 		
 	}
 	return plazalibre;
-    
-}
+    }
 int esDigitoValido(char caracter) {
 	if (caracter >= '0' && caracter <= '9') {
 		return 1;
