@@ -632,7 +632,7 @@ int esLetraValida(char caracter) {
 	}
 }
 int esMatriculaValida(char matricula[]) {
-	int mvalida = 1, i, numero;
+	int mvalida = 1, i, numero,longitud;
 	for (i = 0; i < 7; i++) {
 		if (i < 4) {
 			numero = esDigitoValido(matricula[i]);
@@ -647,6 +647,12 @@ int esMatriculaValida(char matricula[]) {
 			}
 		}
 	}
+	longitud=strlen(matricula);
+	if (longitud > 7){
+		mvalida = 0;
+	}
+		
+	
 
 	return mvalida;
 }
