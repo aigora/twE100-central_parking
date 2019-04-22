@@ -39,6 +39,7 @@ int main(){
  int m1 [15][15];	
  char tipovehiculo;	// para el menu
  char direccion[] = "plazas.txt";
+ char auxmatricula[7];
  struct plaza parking[150];
  int nplazas=150; // NO UTIL DE MOMENTO
  gotoxy( 25, 20); 
@@ -75,7 +76,7 @@ do{
  system("cls");
  
     switch(opcioninicio) {
-    	case 1:
+     	case 1:
 			
 			/*for (parpadeo=220; parpadeo>=0;parpadeo--){
 				
@@ -112,64 +113,65 @@ do{
  	    		system("cls");
                 
                 switch(opcionregistro) {
-                	case 1:
-                		system("color 0E");
-                		fecha();
-                		gotoxy(0, 12);  
-                		printf("\t\t               1-DEJAR VEHICULO             \n\n");
-                		printf("\t\t         Indique el tipo de vehiculo\n\n");
-                		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-						printf("\t\t\t          C - Coche          \n\n");
-						printf("\t\t\t          M - Moto           \n\n");
-                		fflush(stdin);
-                		scanf("%c",&tipovehiculo);
-                		if(tipovehiculo== 'C' || tipovehiculo== 'c' || tipovehiculo== 'M' || tipovehiculo== 'm'){
-						
-                		system("cls");
-                		intentos=3; // inicializa intentos con valor 0 para que si sales del menu vuelvas a tener 3 oportunidades cuenta regresiva
-                		plazaasignada=buscarPlazaLibre(parking,tipovehiculo);
-                			if (plazaasignada!=-1){
-                				do{
-                				system("color 0E");               				
-                				fecha();
-                    			gotoxy(23, 12);
-                    			printf("Indique la matricula de su vehiculo\n\n\t\t\t\t     ");
-                    			
-                    			scanf("%s", parking[plazaasignada].matricula); //el 7 y 8 indican el maximo y el minimo
-                    			
-							    matriculavalida = esMatriculaValida(parking[plazaasignada].matricula);// funcion de coincidencia con matricula ya registrada
-								sicoincide=coincide(parking,plazaasignada);
-								
-																
-                    			     if (matriculavalida == 0 && intentos>0 && sicoincide==0){  		//	cuando es validay llevas menos de 3 intentos	o ya hay una matricula igual registrada					    								              
-										system("color 0C");  //texto se vuelve rojo			
-										gotoxy(25, 17); 
+                 	case 1:{										
+                 		system("color 0E");
+                 		fecha();
+                 		gotoxy(0, 12);  
+                 		printf("\t\t               1-DEJAR VEHICULO             \n\n");
+                 		printf("\t\t         Indique el tipo de vehiculo\n\n");
+                 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+			 			printf("\t\t\t          C - Coche          \n\n");
+			 			printf("\t\t\t          M - Moto           \n\n");
+                 		fflush(stdin);
+                 		scanf("%c",&tipovehiculo);
+                 		if(tipovehiculo== 'C' || tipovehiculo== 'c' || tipovehiculo== 'M' || tipovehiculo== 'm'){
+		 				
+                 		system("cls");
+                 		intentos=3;                                                                    // inicializa intentos con valor 0 para que si sales del menu vuelvas a tener 3 oportunidades cuenta regresiva
+                 		plazaasignada=buscarPlazaLibre(parking,tipovehiculo);                          //funcion que busca una plaza en funcion de la ocupacion del parking y del tipo de vehiculo
+                	 		if (plazaasignada!=-1){
+                	 			do{
+                			     	system("color 0E");               				
+                			     	fecha();
+                    		     	gotoxy(23, 12);
+                    		     	printf("Indique la matricula de su vehiculo\n\n\t\t\t\t     ");
+                    			 
+                    		      	scanf("%s", parking[plazaasignada].matricula); 
+                     			
+					 		        matriculavalida = esMatriculaValida(parking[plazaasignada].matricula);  // funcion que valida la matricula introducida
+							     	sicoincide=coincide(parking,plazaasignada);                             // funcion de coincidencia con matricula ya registrada
+																								
+                     			    if (matriculavalida == 0 && intentos>0 && sicoincide==0){  	    	//cuando es invalida y quedan mas de 0 intentos (al menos 1)=llevas menos de 3 intentos y es distinta de las que ya estan en el parking(para cuando coincide hay otro mensaje)						    								              
+					 					system("color 0C");  //texto se vuelve rojo			
+					 					gotoxy(25, 17); 
                     			     	printf("La matricula no es valida\n\n\t\t\t Intentelo de nuevo %d \n",intentos);
                     			     	Sleep(2000);
                     			     	repite4=true;
                     			     	system("cls");
                     			     	intentos--;
                     			     	/*break;*/ //no lo ponemos para uqe no cierre el bucle do while
-									    }
-                    			     else if (matriculavalida ==1 && intentos>0 && sicoincide==0){		//cuando es invalida o mas de 3 intentos							 
-                    			        parking[plazaasignada].estado_plaza=1;
-                    			        parking[plazaasignada].hora_entrada=fecha(); 
-										gotoxy(24, 17);                  			
-                    			        printf("Vehiculo aparcado correctamente\n");
-                    			        Sleep(2000);
-                    			        salvarFichero(direccion,parking); 
-                    			        repite3=true;
-                    			        
-										system("cls");
-										break;  	//necesario									   										               			                                        			
-                    		            }
-                    		         else if (sicoincide==1){
-                    		         	
+					 				    }
+                     			    else if (matriculavalida ==1 && intentos>0 && sicoincide==0){	   //cuando es valida y quedan mas de 0 intentos (al menos 1)=llevas menos de 3 intentos y es distinta de las que ya estan en el parking						 
+                     			        parking[plazaasignada].estado_plaza=1;                         //asigna un 1(ocupada) a la plaza asignada
+                     			        parking[plazaasignada].hora_entrada=fecha();                   //coge fecha actual para la plaza asignada
+					   					gotoxy(24, 17);                  			
+                     			        printf("Vehiculo aparcado correctamente\n");
+                     			        Sleep(2000);
+                     			        salvarFichero(direccion,parking);                              //guarda en el fichero los cambios
+                     			        repite3=true;                    			        
+					 					system("cls");
+					 					break;  	//necesario									   										               			                                        			
+                     		            }
+                     		        else if (sicoincide!=0){                                           //cuando es igual a una matricula ya en el parking    
+		 				 			    system("color 0C");
+		                                gotoxy(24, 17); 
+		                                printf("El vehiculo ya esta en el parking");		    
+		                                Sleep(2000);           		         	
                     		         	repite3=true;                    			        
-										system("cls");
-										break;
-							    		}
-                    		         else if (intentos<1){
+					 					system("cls");
+					 					break;
+						 	    		}
+                     		        else if (intentos<1){                                              //cuando no te quedan intentos
                     		         	system("color 0C");
                     		         	gotoxy(24, 17); 
                     			     	printf("Se ha quedado sin intentos\n");
@@ -177,41 +179,110 @@ do{
                     		         	repite3=true;
                     			     	system("cls");  
 										break;                    		         	
-									    }
-							    	
-                    	    	}
-                    		    while(repite4);
-                    		getchar();    //necesario para pausar tras aparcado correctamente
-                	    	break;
-                	        }
+					 				    }							    	
+                     	    	}
+                     		    while(repite4);
+                     		getchar();    //necesario para pausar tras aparcado correctamente
+                 	    	break;
+                 	        }
                 	 	    else {
-                		    	system("color 0E");
-                		    	fecha();
-                	    		gotoxy(20, 20);
-                	    		printf("Lo sentimos, no hay plazas de %c disponibles",tipovehiculo);
-                	    		Sleep(1500);
-                	    		system("cls");
-                	    		repite3=true;
-                	    		break;
-                		    }                			               			
-					    }
-					    else{
+                 		    	system("color 0E");
+                 		    	fecha();
+                 	    		gotoxy(20, 20);
+                 	    		printf("Lo sentimos, no hay plazas de %c disponibles",tipovehiculo);
+                 	    		Sleep(1500);
+                 	    		system("cls");
+                 	    		repite3=true;
+                 	    		break;
+                 		    }                			               			
+			 		    }
+			 		    else{
 					    	system("cls");
 					    	repite3=true;
-						}              	               						               		
+			 			}              	               						               		
 				        break;
-				        
-				    case 4 :
-                    	system("cls");
-						repite4=false;						 
-                    	repite3=false;     //si no se pone no deja retroceder despues de haber entrado y retrocedido en en buble de repite3 ya que al salir se le asigna true
-						repite=true;   
-						
-						break;
-				}
-            
-            
-            
+			 	}
+			 	    case 2 :{
+			 	    	system("color 0E");
+                 		fecha();
+                 		gotoxy(0, 12);  
+                  		printf("\t\t               2-RECOGER VEHICULO             \n\n");
+                 		printf("\t\t         Indique el tipo de vehiculo\n\n");
+                 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+		 				printf("\t\t\t          C - Coche          \n\n");
+		 				printf("\t\t\t          M - Moto           \n\n");
+                 		fflush(stdin);
+                 		scanf("%c",&tipovehiculo);
+				    	
+		 		    	if(tipovehiculo== 'C' || tipovehiculo== 'c' || tipovehiculo== 'M' || tipovehiculo== 'm'){
+			 	    	system("cls");
+                 		intentos=3;  
+				 		    do{
+                			     	system("color 0E");               				
+                			     	fecha();
+                    		     	gotoxy(23, 12);
+                    		     	printf("Indique la matricula de su vehiculo\n\n\t\t\t\t     ");
+                    			 
+                    		      	scanf("%s", parking[0].matricula);                          //uso el 0 de la estructura parking como almacenamiento temporal para la matricula que bamos a comparar con el resto( del 1 al 150)
+                    			
+						 	        matriculavalida = esMatriculaValida(parking[0].matricula);  // funcion que valida la matricula introducida
+							     	sicoincide=coincide(parking,0);                             // funcion de coincidencia con matricula ya registrada
+																								
+                    	 		    if (matriculavalida == 0 && intentos>0 && sicoincide==0){  		//	cuando es validay llevas menos de 3 intentos	o ya hay una matricula igual registrada					    								              
+						 				system("color 0C");  //texto se vuelve rojo			
+						 				gotoxy(25, 17); 
+                    			     	printf("La matricula no es valida\n\n\t\t\t Intentelo de nuevo %d \n",intentos);
+                    			     	Sleep(2000);
+                    			     	repite4=true;
+                    			     	system("cls");
+                    			     	intentos--;
+                    			     	/*break;*/ //no lo ponemos para uqe no cierre el bucle do while
+					 				    }
+                     			    else if (matriculavalida ==1 && intentos>0 && sicoincide!=0){	   //cuando es invalida o mas de 3 intentos	
+                     			        for(i=0;i<=7;i++){                                          //escribe guiones para la matricula vacia
+                     			        	if(i!=7){
+                    	 		        		parking[sicoincide].matricula[i] = '-';                    			        		
+							 				}
+                     			        	else {
+				 							parking[sicoincide].matricula[i] = 0 ;
+							 			    }                    			        	
+							 			}															 
+                    	 		        parking[sicoincide].estado_plaza=0;                         //asigna un 1(ocupada) a la plaza en la que coincide con la 0 que es la auxiliar
+                    	 		        parking[sicoincide].hora_salida=fecha();                   //coge fecha actual para a plaza en la que coincide con la 0 que es la auxiliar
+						 				gotoxy(24, 17);                  			
+                    	 		        printf("Vehiculo retirado correctamente\n");
+                    	 		        Sleep(2000);
+                    	 		        salvarFichero(direccion,parking);                              //guarda en el fichero los cambios
+                    	 		        repite3=true;                    			        
+						 				system("cls");
+						 				break;  	//necesario									   										               			                                        			
+                    	 	            }
+                    	 	        
+                    	 	        else if (intentos<1){                                              //cuando no te quedan intentos
+                    		         	system("color 0C");
+                    		         	gotoxy(24, 17); 
+                    			     	printf("Se ha quedado sin intentos\n");
+                    			     	Sleep(2000);
+                    		         	repite3=true;
+                    			     	system("cls");  
+										break;                    		         	
+									    }							    	
+                    	     	}
+                    	 	    while(repite4);																			
+		 		        }
+		 		    	else{
+					    	system("cls");
+					    	repite3=true;
+		 				} 					    	
+	 					break;
+	 				}				    	
+		 		    case 4 :
+                     	system("cls");
+			 			repite4=false;						 
+                     	repite3=false;     //si no se pone no deja retroceder despues de haber entrado y retrocedido en en buble de repite3 ya que al salir se le asigna true
+			 			repite=true;   						
+		 				break;
+			 	}                                    
             }
             while(repite3);
             
@@ -219,9 +290,8 @@ do{
             
  	    	
  	     	    	
- 	    	break;
- 	    	
-    	case 2:
+ 	    	break; 	    	
+     	case 2:{
   		
 			 /*for (parpadeo=220; parpadeo>=0;parpadeo--){
 				
@@ -255,33 +325,30 @@ do{
  	    		printf("4 - Volver\n");
  	    		scanf ("%d",&opcionplanta);
  	    		system("cls");
-			 
- 	    	
- 	    		
+			  	    	    		
  	    		switch(opcionplanta) {
- 	    			case 1: 	    				
+ 	    			case 1:{	    				
  	    				system("color 0E");
  	    				printf("\n\n\t\t\t\t     PLANTA 1\n\n\n");
  	    				for (k=1;k<=242;k++){ //condicion para crear las plazas  LARGO DEL PARKING				
-		                	printf("|\t");  //imprime barras			        	           
-		                    while   (k==55){               //fila numerica       DA EL LARGO DE LAS PLAZAS   55 DE COCHE		    
-		                	    i=0; //meter en el futuro el cuadrante a partir de la estructura		       	    
+		                 	printf("|\t");  //imprime barras			        	           
+	 	                    while   (k==55){               //fila numerica       DA EL LARGO DE LAS PLAZAS   55 DE COCHE		    
+		                 	    i=0; //meter en el futuro el cuadrante a partir de la estructura		       	    
 	     	                    for (j=1;j<=10;j++){
 	     	                        m1[i][j]=i*10+j;
-				                    printf("|   %d\t",m1[i][j]);    				        
-		                        }
-		                        printf("|\n\n\n\n");
-		                        break; 
+		 		                    printf("|   %d\t",m1[i][j]);    				        
+	 	                        }
+	 	                        printf("|\n\n\n\n");
+	 	                        break; 
 			             	}		            
-		                    while   (k==110){               //fila numerica		       	    
+	 	                    while   (k==110){               //fila numerica		       	    
 				              	i=1; //meter en el futuro el cuadrante a partir de la estructura					
 	     	                    for (j=1;j<=10;j++){
-
 	     	                        m1[i][j]=i*10+j;
 	     	                        printf("|   %d\t",m1[i][j]);
-				                }     		                        
-		                        printf("|\n\n\n\n");
-		                        break;   
+	 			                }     		                        
+	 	                        printf("|\n\n\n\n");
+	 	                        break;  
 	                        }	           
 	                        while   (k==132){               //fila numerica       DA EL LARGO DE LAS PLAZAS   22 DE MOTO		       	    
 				            	i=2; //meter en el futuro el cuadrante a partir de la estructura					
@@ -315,8 +382,8 @@ do{
                         system("cls");
                         repite2=true;                       
                         break;
-                        
-                    case 2:
+                        }
+                    case 2:{
                     	system("color 0E");
  	    				printf("\n\n\t\t\t\t     PLANTA 2\n\n\n");
                     	for (k=1;k<=219;k++){ //condicion para crear las plazas  LARGO DEL PARKING				
@@ -372,8 +439,8 @@ do{
                         system("cls");
                         repite2=true;                       
                         break;
-                        
-                    case 3: 	    				
+                        }
+                    case 3: {												    				
  	    				system("color 0E");
  	    				printf("\n\n\t\t\t\t     PLANTA 3\n\n\n");
  	    				for (k=1;k<=242;k++){ //condicion para crear las plazas  LARGO DEL PARKING				
@@ -416,7 +483,7 @@ do{
 		                        break;   
 	                        }
 	                        while   (k==242){               //fila numerica		       	    
-				        	    i=14; //meter en el futuro el cuadrante a partir de la estructura  					
+			 	        	    i=14; //meter en el futuro el cuadrante a partir de la estructura  					
 	     	                    for (j=1;j<=10;j++){      
 	     	                        m1[i][j]=i*10+j;             //numeracion de las plazaS	     	            					        	    
 				                    printf("|  %d\t",m1[i][j]);				                       
@@ -429,15 +496,14 @@ do{
                         system("cls");
                         repite2=true;                       
                         break;    
-												
-                    case 4 :
+			        	}
+                    case 4 :{
                     	system("cls");						 
                     	repite2=false;     //si no se pone no deja retroceder despues de haber entrado y retrocedido en en buble de repite2 ya que al salir se le asigna true
-						repite=true;   
-						
+						repite=true;   						
 						break;	
-						
- 	    			default:
+				    	}
+ 	    			default:{					
 	                  	while (opcionplanta!=1 && opcionplanta!=2 ){
 	                  		fflush(stdin);   //funcion necesaria para que limpie el buffer y no se repita el default en bucle en caso de indexar una letra en vez de un numero distinto de 1 y 2
 	                  		system("cls");
@@ -446,16 +512,14 @@ do{
 	     	                Sleep(1500);
 	     	                system("cls");
 	     	                repite2=true;
-			                break;						 
-				        }	    		
-			    }
+			                break;						 	 			    	    		
+	 		                }
+                        }
+                    }
             }
- 	    	while (repite2);
- 	       		
- 		
- 	    	
+ 	    	while (repite2); 	    	
             break;
-            
+            }
     	case 3:
     		for (parpadeo=220; parpadeo>=0;parpadeo--){
 				
@@ -493,18 +557,18 @@ while (repite);
 return 0 ;
  
 }
-int coincide(struct plaza parking[], int plazaasignada){
+int coincide(struct plaza parking[], int plaza){
 	int i,coincide;		
 	coincide=0;
-	while(i<150 && i!=plazaasignada){
+	while(i<150 && i!=plaza){
 	
 		
-		if( strcmp(parking[i].matricula,parking[plazaasignada].matricula)==0){		
-		    coincide=1;
-		    system("color 0C");
-		    gotoxy(24, 17); 
-		    printf("El vehiculo ya esta en el parking");		    
-		    Sleep(2000);
+		if( strcmp(parking[i].matricula,parking[plaza].matricula)==0){		
+		    /*coincide=1;*/
+		    coincide=i; //se añade para que la funcion sirva para registrar la salida del parking ya que necesitamos saber que plaza es la quie coincide para cambiar su estado
+		                //tambien modificamos las condiciones y en sicoincide==1 ponemos sicoincide!=0
+		    
+		    coincide=i; //se añade para que la funcion sirva para registrar la salida del parking ya que necesitamos saber que plaza es la quie coincide para cambiar su estado
 		    break;
 	    }			
     	else{
@@ -607,9 +671,8 @@ int buscarPlazaLibre(struct plaza parking[],char tipovehiculo) {
 		}
 		
 	}
-	printf("%d %d %d",j,k,l);   //para ver si funciona lo anterior en la funcion
-	//tal como esta tiene en cuenta el tipo de vehiculo por lo que no funciona correctamente
-	Sleep(3000);
+	/*printf("%d %d %d",j,k,l);*/   //para ver si funciona lo anterior en la funcion indica el numero de vehiculos por planta
+	
 	return plazalibre;
     }
 int esDigitoValido(char caracter) {
@@ -647,7 +710,7 @@ int esMatriculaValida(char matricula[]) {
 			}
 		}
 	}
-	longitud=strlen(matricula);
+	longitud=strlen(matricula); //compara la longitud de la matricula y si es mayor que 7 no es valida
 	if (longitud > 7){
 		mvalida = 0;
 	}
