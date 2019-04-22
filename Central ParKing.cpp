@@ -243,21 +243,18 @@ do{
                  		fecha();
                  		gotoxy(0, 12);  
                   		printf("\t\t               2-RECOGER VEHICULO             \n\n");
-                 		printf("\t\t         Indique el tipo de vehiculo\n\n");
-                 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-		 				printf("\t\t\t          C - Coche          \n\n");
-		 				printf("\t\t\t          M - Moto           \n\n");
-                 		fflush(stdin);
-                 		scanf("%c",&tipovehiculo);
+                  		
+                 		printf("\t\t\t Indique la matricula de su vehiculo\n\n\t\t\t\t"); 
+                 		
+		 				
 				    	
-		 		    	if(tipovehiculo== 'C' || tipovehiculo== 'c' || tipovehiculo== 'M' || tipovehiculo== 'm'){
-			 	    	system("cls");
+			 	    	
                  		intentos=3;  
 				 		    do{
                 			     	system("color 0E");               				
                 			     	fecha();
                     		     	gotoxy(23, 12);
-                    		     	printf("Indique la matricula de su vehiculo\n\n\t\t\t\t     ");
+                    		     	    
                     			 
                     		      	scanf("%s", parking[0].matricula);                          //uso el 0 de la estructura parking como almacenamiento temporal para la matricula que bamos a comparar con el resto( del 1 al 150)
                     			
@@ -294,9 +291,13 @@ do{
 										Sleep(2000); 
 										 
 										 
-										 
-										              			
-                    	 		        printf("Vehiculo retirado correctamente\n");
+										if(parking[sicoincide].tipo_plaza='C') {
+											printf("Coche retirado correctamente\n");
+										}
+										else if(parking[sicoincide].tipo_plaza='M') {
+											printf("Moto retirada correctamente\n");
+										}              			
+                    	 		        
                     	 		        Sleep(2000);
                     	 		        salvarFichero(direccion,parking);                              //guarda en el fichero los cambios
                     	 		        repite3=true;                    			        
@@ -324,11 +325,7 @@ do{
 		 							    }							    	
                     	     	}
                     	 	    while(repite4);																			
-		 		        }
-		 		    	else{
-					    	system("cls");
-					    	repite3=true;
-		 				} 					    	
+		 		        					    	
 	 					break;
 	 				    }				    	
 		 		    case 4 :{
@@ -691,20 +688,43 @@ void plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta){
 					        }
 	if (k==largodeplaza){
 						        
-							    for (i=desde;i<=hasta-1;i++){
-							    if(desde<=9){ //espacios para las plazas del 1 al 9
+			 				    for (i=desde;i<=hasta-1;i++){
+			 				    if(desde<=10){ //espacios para las plazas del 1 al 9
+			 	    			    if(i==hasta-1){
+			 				    	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
+			 	    		    	printf("|");
+			 			        	if(parking[i].estado_plaza==1 && i!=hasta){
+			 	    				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 200);
+			 	    				printf("  %d   ",i);
+					 	        	}
+			 			        	if(parking[i].estado_plaza==0 && i!=hasta){
+			 			    		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+			 			    		printf("  %d   ",i);
+			 			    		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);							
+						         	}
+				 				}
+							    
+							    else {
+								
 							    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
 						    	printf("|");
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+						    	if(parking[i].estado_plaza==1 && i!=hasta){
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 200);
 								printf("   %d   ",i);
+						      	}
+						      	if(parking[i].estado_plaza==0 && i!=hasta){
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+								printf("   %d   ",i);
+						      	}
 								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
 						        
-							    	
-								}	                       
+							    }	
+								}	 
+								                     
 								else if(parking[desde].planta==1 || parking[desde].planta==2){					
 								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
 						    	printf("|");
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 								printf("   %d  ",i);
 								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 130);	
 						        }
