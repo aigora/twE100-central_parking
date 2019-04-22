@@ -138,10 +138,10 @@ do{
 							    matriculavalida = esMatriculaValida(parking[plazaasignada].matricula);
 								i=1;
 								coincide=0;
-								while(i<150){																	
+								while(i<150 && i !=plazaasignada){																	
 									   if  (strcmp(parking[i].matricula,parking[plazaasignada].matricula)==0){									
 									   coincide=1;
-									   printf("Indi %s      %s",parking[i].matricula,parking[plazaasignada].matricula);
+									   printf("Indi %s      %s",parking[i].matricula,parking[plazaasignada].matricula); ////////////asi siempre coincide porque la plazaasignada tambien la cuenta entre 0 y 150 al recorrerla la i
 									   	Sleep(4000);
 									   fflush(stdin);
 		                               break;
