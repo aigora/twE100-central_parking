@@ -16,11 +16,14 @@ struct plaza {
 	int hora_entrada;
 	int hora_salida;
     };
-    
-    
 
+  
+int esDigitoValido(char caracter);    
+int esLetraValida(char caracter);
+int esMatriculaValida(char matricula[]);
 int buscarPlazaLibre(struct plaza parking[],char tipovehiculo);    
 void leerFichero(char direccion[],struct plaza parking[]);
+void salvarFichero(char direccion[],struct plaza parking[]);
 void gotoxy(short x, short y);
 int fecha();
 
@@ -30,8 +33,8 @@ int main(){
 	
  system("mode con: cols=81 lines=55");  // establece el tamaño de pantalla
  int x,y;	
- int opcioninicio,parpadeo,opcionregistro,opcionplanta,plazaasignada;
- bool repite,repite2,repite3;     //establece la variable que permite repite la aparicion del menu con do en caso de defaul (digito no valido)
+ int opcioninicio,parpadeo,opcionregistro,opcionplanta,plazaasignada,matriculavalida,intentos,coincide;
+ bool repite,repite2,repite3,repite4;     //establece la variable que permite repite la aparicion del menu con do en caso de defaul (digito no valido)
  int i,k,j;
  int m1 [15][15];	
  char tipovehiculo;	// para el menu
@@ -41,19 +44,19 @@ int main(){
  gotoxy( 25, 20); 
  printf("Bienvenido a Central Parking\n");
  Sleep(1000);
- /*leerFichero (parking,&nplazas);*/
- Sleep(500);
+ leerFichero(direccion,parking); 
+ Sleep(1000);
  system ("cls");
  
  fecha();
-leerFichero(direccion,parking); 
-
+ 
+/*
  for (i=1;i<=150;i++){
  
 						
 							printf("\n%d %d %c %d %s\n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula);
 }
-getchar();
+getchar();*/
 
 do{
  system("color 0E"); //varia colorde consola yu letras	
@@ -120,22 +123,77 @@ do{
 						printf("\t\t\t          M - Moto           \n\n");
                 		fflush(stdin);
                 		scanf("%c",&tipovehiculo);
+                		if(tipovehiculo== 'C' || tipovehiculo== 'c' || tipovehiculo== 'M' || tipovehiculo== 'm'){
+						
                 		system("cls");
+                		intentos=3; // inicializa intentos con valor 0 para que si sales del menu vuelvas a tener 3 oportunidades cuenta regresiva
                 		plazaasignada=buscarPlazaLibre(parking,tipovehiculo);
                 			if (plazaasignada!=-1){
-                				system("color 0E");
-                				int u;
+                				do{
+                				system("color 0E");               				
                 				fecha();
-                    			gotoxy(22, 12);
-                    			parking[plazaasignada].estado_plaza=1;
-                    			parking[plazaasignada].hora_entrada=fecha();
-                    			Sleep(2000);
-                    			
-                    			printf(" %d\n\n\t\t\t",parking[plazaasignada].hora_entrada);
-                    			printf("Indique la matricula de su %c\n\n\t\t\t",tipovehiculo);
-                    			Sleep(3500);
-                	    		break;
-                	      	}
+                    			gotoxy(23, 12);
+                    			printf("Indique la matricula de su vehiculo\n\n\t\t\t\t     ");
+                    			scanf("%8s", parking[plazaasignada].matricula,7); //el 7 y 8 indican el maximo y el minimo
+							    matriculavalida = esMatriculaValida(parking[plazaasignada].matricula);
+								i=1;
+								coincide=0;
+								while(i<150){																	
+									   if  (strcmp(parking[i].matricula,parking[plazaasignada].matricula)==0){									
+									   coincide=1;
+									   printf("Indi %s      %s",parking[i].matricula,parking[plazaasignada].matricula);
+									   	Sleep(4000);
+									   fflush(stdin);
+		                               break;
+	                              	   }
+	                            	   else {		
+	                        	       coincide=0;
+		                               i++;
+	                             	   }	   								 
+							    	
+							    	
+						    	}
+								system("cls");						
+								printf("kkkkk %d",coincide);
+								Sleep(4000);
+									
+                    			     if ((matriculavalida == 0 && intentos>0) || coincide==1){  		//	cuando es validay llevas menos de 3 intentos	o ya hay una matricula igual registrada					    								              
+										system("color 0C");  //texto se vuelve rojo			
+										gotoxy(25, 17); 
+                    			     	printf("La matricula no es valida\n\n\t\t\t Intentelo de nuevo %d \n",intentos);
+                    			     	Sleep(2000);
+                    			     	repite4=true;
+                    			     	system("cls");
+                    			     	intentos--;
+                    			     	/*break;*/ //no lo ponemos para uqe no cierre el bucle do while
+									    }
+                    			     else if (matriculavalida ==1 && intentos>0 && coincide==0){		//cuando es invalida o mas de 3 intentos							 
+                    			        parking[plazaasignada].estado_plaza=1;
+                    			        parking[plazaasignada].hora_entrada=fecha(); 
+										gotoxy(24, 17);                  			
+                    			        printf("Vehiculo aparcado correctamente\n");
+                    			        Sleep(2000);
+                    			        salvarFichero(direccion,parking); 
+                    			        repite3=true;
+                    			        
+										system("cls");
+										break;  	//necesario									   										               			                                        			
+                    		            }
+                    		         else if (intentos<1){
+                    		         	system("color 0C");
+                    		         	gotoxy(24, 17); 
+                    			     	printf("Se ha quedado sin intentos\n");
+                    			     	Sleep(2000);
+                    		         	repite3=true;
+                    			     	system("cls");  
+										break;                    		         	
+									    }
+							    	
+                    	    	}
+                    		    while(repite4);
+                    		getchar();    //necesario para pausar tras aparcado correctamente
+                	    	break;
+                	        }
                 	 	    else {
                 		    	system("color 0E");
                 		    	fecha();
@@ -145,18 +203,17 @@ do{
                 	    		system("cls");
                 	    		repite3=true;
                 	    		break;
-                		    }
-                			
-                			
-							
-                		getchar();	
-                		
-						
-                		
+                		    }                			               			
+					    }
+					    else{
+					    	system("cls");
+					    	repite3=true;
+						}              	               						               		
 				        break;
 				        
 				    case 4 :
-                    	system("cls");						 
+                    	system("cls");
+						repite4=false;						 
                     	repite3=false;     //si no se pone no deja retroceder despues de haber entrado y retrocedido en en buble de repite3 ya que al salir se le asigna true
 						repite=true;   
 						
@@ -446,58 +503,140 @@ while (repite);
 return 0 ;
  
 }
+
+	
+
 int buscarPlazaLibre(struct plaza parking[],char tipovehiculo) {
-	int i = 1;
+	char direccion[]= "plazas.txt";
+	leerFichero(direccion,parking); //necesitamos que lea de nuevo el fichero para acctualizar la informacion de cuantos coches hay en cada planta y que sirva la comparacion si no se quedaria con la informacion previa a asignar la plaza y siempre la asignaria en la misma planta
+	system("cls"); //para que no salga en pantalla datos cargados
+	int i ;
 	int j,k,l;
 	int libre1,libre2,libre3;
 	int plazalibre=-1;
 	for (i=0;i<=150;i++) {
-		if (parking[i].tipo_plaza == tipovehiculo /*|| parking[i].tipo_plaza == tipovehiculo + 32*/) {
+		if (parking[i].tipo_plaza == tipovehiculo || parking[i].tipo_plaza == tipovehiculo - 32 ) { //-32 por si se digita en tipovehiculo una c para que sea igual que C
 			while (parking[i].estado_plaza == 0 && parking[i].planta == 1) {
-				libre1 = i;
 				j++;
-				break;
+				
 			}
 			while (parking[i].estado_plaza == 0 && parking[i].planta == 2){
-				libre2 = i;
 				k++;
-				break;				
+								
 			}
 			while (parking[i].estado_plaza == 0 && parking[i].planta == 3){
-				libre3 = i;
 				l++;
-				break;
+				
 		    }
-		    
+		break;    
 		
 	    }
 	   
 	    }
 	if (j<k && j<l){////compara las tres plantas para asignar la plaza a la que menos coches tenga
-		plazalibre=libre1;
+	    for (i=0;i<=150;i++){
+	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 1){
+	    		plazalibre=i;
+	    		break;
+			}
+		}
+		
 	}
 	else if (k<j && k<l){
-		plazalibre=libre2;
+		for (i=0;i<=150;i++){
+	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 2){
+	    		plazalibre=i;
+	    		break;
+			}
+		}
+		
 	}
-	else if (l<j || l<k){
-		plazalibre=libre3;
+	else if (l<j && l<k){
+		for (i=0;i<=150;i++){
+	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 3){
+	    		plazalibre=i;
+	    		break;
+			}
+		}
+		
 	}
 	else if (j==k && k==l){
-		plazalibre=libre1;
+		for (i=0;i<=150;i++){
+	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 1){
+	    		plazalibre=i;
+	    		break;
+			}
+		}
+		
 	}
 	else if (j>k && k==l){
-		plazalibre=libre2;
+		for (i=0;i<=150;i++){
+	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 2){
+	    		plazalibre=i;
+	    		break;
+			}
+		}
+		
 	}
 	else if (k>j && j==l){
-		plazalibre=libre1;
+		for (i=0;i<=150;i++){
+	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 3){
+	    		plazalibre=i;
+	    		break;
+			}
+		}
+		
 	}
 	else if (l>j && j==k){
-		plazalibre=libre1;
+		for (i=0;i<=150;i++){
+	    	if (parking[i].estado_plaza == 0 && parking[i].planta == 1){
+	    		plazalibre=i;
+	    		break;
+			}
+		}
+		
 	}
 	return plazalibre;
     
 }
+int esDigitoValido(char caracter) {
+	if (caracter >= '0' && caracter <= '9') {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+int esLetraValida(char caracter) {
+	if (caracter >= 'a' && caracter <= 'z') {
+		caracter = caracter - 32;
+	}
+	if (caracter > 'A' && caracter <= 'Z' && caracter != 'E' && caracter != 'I' && caracter != 'O' && caracter != 'U') {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+int esMatriculaValida(char matricula[]) {
+	int mvalida = 1, i, numero;
+	for (i = 0; i < 7; i++) {
+		if (i < 4) {
+			numero = esDigitoValido(matricula[i]);
+			if (numero == 0) {
+				mvalida = 0;
+			}
+		}
+		else {
+			numero = esLetraValida(matricula[i]);
+			if (numero == 0) {
+				mvalida = 0;
+			}
+		}
+	}
 
+	return mvalida;
+}
 void leerFichero(char direccion[],struct plaza parking[]) {
 	int i;
 	FILE*pf;
@@ -510,37 +649,26 @@ void leerFichero(char direccion[],struct plaza parking[]) {
     for (i=1;i<=150;i++){
         fscanf(pf,"%d %d %c %d %s\n", &parking[i].numero_plaza, &parking[i].planta, &parking[i].tipo_plaza, &parking[i].estado_plaza, &parking[i].matricula);
     }
+    gotoxy( 31, 27);
+    printf("Datos cargados\n");
+    
+    
     fclose(pf);
 }
-/*
-} 
-void salvarFichero(char nombreFichero[], struct plaza plazas[], int dim) {
-	FILE*fichero;
+void salvarFichero(char direccion[],struct plaza parking[]) {
 	int i;
-	fichero = fopen("plazas.txt", "w");
+	FILE*pf;
+    pf=fopen ("plazas.txt","w");   //donde    "plazas.txt" deberia ir  direccion pero no sobreescribe el archivo
+    if (pf==NULL){
+        printf("Error al abrir el fichero\n");
+        return ; // Se termina el programa en este punto
+    }
 
-	if (ferror(fichero)){ // Equivalente a if(ferror(pf)!=0)
-    perror("Error de lectura");
-    clearerr(fichero);
-	}
-    else {
-		gotoxy( 31, 25); 
-		printf("Datos cargados\n");
-		return; // return sale del programa
-	}
-
-	for (i = 0; i < dim; i++) {
-		fprintf(fichero, "%d%d%d %d %c %d %s", &plazas[i].numero_plaza, &plazas[i].planta, &plazas[i].tipo_plaza,&plazas[i].estado_plaza,&plazas[i].matricula);
-	}
-
-	fclose(fichero);
+    for (i=1;i<=150;i++){
+        fprintf(pf,"%d %d %c %d %s\n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula);
+    }
+    fclose(pf);
 }
-
-
-
-
-void clearerr (FILE *fichero);
-*/
 void gotoxy(short x, short y) {
 COORD pos = {x, y};
 SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
