@@ -66,7 +66,7 @@ int main(){
  int x,y;	
  int opcioninicio,parpadeo,opcionregistro,opcionplanta,plazaasignada,matriculavalida,intentos,sicoincide,existe,numero_operaciones;
  float precio;
- bool repite,repite2,repite3,repite4;     //establece la variable que permite repite la aparicion del menu con do en caso de defaul (digito no valido)
+ bool repite,repite2,repite3,repite4,repite5;     //establece la variable que permite repite la aparicion del menu con do en caso de defaul (digito no valido)
  int i,k,j;
  int m1 [15][15];	
  char tipovehiculo;	// para el menu
@@ -305,8 +305,7 @@ do{
                     	 		Sleep(1500);
                     	 		ticket(parking,sicoincide,precio,operaciones);
                     	 		
-                    	 		leerGanancias(direccion3,operaciones);  //tras generar el tickect trabajamos con nuetro balance de cuentas y operaciones
-                    	 		
+                    	 		leerGanancias(direccion3,operaciones);  //tras generar el tickect trabajamos con nuetro balance de cuentas y operaciones                    	 		
                     	 		sumarGanancias (operaciones,precio);
                     	 		numero_operaciones= operaciones[0].numero;
                     	 		salvarGanancias (direccion3,operaciones,numero_operaciones);
@@ -587,28 +586,65 @@ do{
  		    break;	
  	    	}
  	    case 4:{
+ 	    	do{
+ 	    	system("mode con: cols=81 lines=2000");	  
+ 	    	int eleccion;
  	    	system("color 0E");
  	    	fecha();
- 	    	system("mode con: cols=81 lines=2000");	    	        
+ 	    	  	        
          	printf("\n\n   Numero de operaciones     Ingresos totales   \n\n"); 
             printf("                   %d           %0.2f \n",operaciones[0].numero,operaciones[0].ganancias );
             printf("\n\n   Numero de operacion       Ingresos             Fecha de la operacion   \n\n");
             
             for (i=1;i<=operaciones[0].numero;i++){
-            printf("                   %d           %0.2f                  %d:%02d  %d/%d/%d\n",operaciones[i].numero,operaciones[i].ganancias,operaciones[i].hora,operaciones[i].min,operaciones[i].dia,operaciones[i].mes,operaciones[i].ano );
+            printf("                   %d           %0.2f                  %d:%02d  %d/%d/%d\n\n\n",operaciones[i].numero,operaciones[i].ganancias,operaciones[i].hora,operaciones[i].min,operaciones[i].dia,operaciones[i].mes,operaciones[i].ano );
  	        }
- 	    	
+ 	        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+ 	        printf("\t\t\t\t    1 - Resetear    \n\n");
+ 	    	printf("\t\t\t\t    0 - Volver      \n");
+            
+ 	    	scanf("%d",&eleccion);
+ 	    	switch(eleccion){
+ 	    		case 0:{
+ 	    			system("cls");
+ 	    	        repite=true;
+					break;
+				 }
+				 case 1:{
+				 	for(i=0;i<=operaciones[0].numero;i++){
+				 		operaciones[i].numero=0;
+				 		operaciones[i].ganancias=0;
+				 		operaciones[i].hora=0;
+						operaciones[i].min=0;
+						operaciones[i].dia=0;
+						operaciones[i].mes=0;
+						operaciones[i].ano=0;
+					 }
+				 	salvarGanancias (direccion3,operaciones,numero_operaciones);
+ 	    			system("cls");
+ 	    	        repite=true;
+ 		            break;	
+
+				 }
+				 default:{
+					
+ 	              	while (opcioninicio!=1 && opcioninicio!=0 ){
+ 	              	system("cls");
+ 	              	gotoxy(22, 13); 
+  		            printf("Por favor, introduce una opcion valida\n");
+	     	        Sleep(2000);
+	             	system("cls");
+	             	repite5=true;
+	      	    	break;
+	         	    }
+	 	         }
+	    	}
+			}
+	    	while(repite5);
 			break;
-		 }
+	    }
  	    
-     	default:
- 	    	while (opcioninicio!=1 && opcioninicio!=2 && opcioninicio!=3){
-  		    printf("Por favor, introduce una opcion valida\n");
-	     	Sleep(2000);
-	     	system("cls");
-	     	repite=true;
-	 		break;	
-	 	    }
+     	
  	}
 }
 while (repite);
