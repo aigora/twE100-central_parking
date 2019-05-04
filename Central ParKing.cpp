@@ -76,7 +76,7 @@ int main(){
  char auxmatricula[7];
  struct plaza parking[151];       // 150 de las plazas    la 0 de auxiliar y la sicoincide total 151
  struct distintivo ambiental[20000];
- struct registro operaciones[2000];
+ struct registro operaciones[200];
  
  int nplazas=150; // NO UTIL DE MOMENTO
  gotoxy( 25, 20); 
@@ -90,8 +90,8 @@ int main(){
  leerDistintivo(direccion2,ambiental);
  Sleep(500);
  leerGanancias(direccion3,operaciones);
- for (i=0;i<=3;i++){
-    	printf("%d %f %.0f:0%.0f  %d/%d/%d\n",operaciones[i].numero,operaciones[i].ganancias,operaciones[i].hora,operaciones[i].min,operaciones[i].dia,operaciones[i].mes,operaciones[i].ano );
+ for (i=0;i<=6;i++){
+    	printf("%d %f %d:%02d  %d/%d/%d\n",operaciones[i].numero,operaciones[i].ganancias,operaciones[i].hora,operaciones[i].min,operaciones[i].dia,operaciones[i].mes,operaciones[i].ano );
     
     }
  Sleep(1000);
@@ -304,6 +304,7 @@ do{
 		 						}              			       
                     	 		Sleep(1500);
                     	 		ticket(parking,sicoincide,precio);
+                    	 		leerGanancias(direccion3,operaciones);
                     	 		
                     	 		sumarGanancias (operaciones,precio);
                     	 		numero_operaciones= operaciones[0].numero;
@@ -585,6 +586,43 @@ do{
  		    break;	
  	    	}
  	    case 4:{
+ 	    	system("color 0E");
+ 	    	fecha();
+ 	    	system("mode con: cols=81 lines=2000");
+ 	    		int pointer = 0;
+	system("cls");
+	while(true)
+	{
+		
+		
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+		printf("\n\nMain Menu\n\n");
+		
+		
+		while(true)
+		{
+			if (GetAsyncKeyState(VK_UP) != 0)
+			{
+				pointer -= 1;
+				
+				break;
+			}
+			else if (GetAsyncKeyState(VK_DOWN) != 0)
+			{
+				pointer += 1;
+				
+				break;
+			}
+			
+		}
+		
+		Sleep(150);
+	}
+ 	    	
+ 	    	
+ 	    	
+ 	    	
+ 	    	
  	    	
 			break;
 		 }
@@ -873,60 +911,84 @@ float calculartarifa(struct plaza parking[],struct distintivo ambiental[], int s
 	     	if(ambiental[i].tipo_etiqueta=='O'){
 	     		/*printf("La etiqueta de vehiculo es : Cero emisiones ");*/
 	     		parking[sicoincide].etiqueta_medioambiental='O';
-	     		if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
- 		    	precio=(a-c)*0.035+((b-d)*60)*0.035;     //0.035  euros minuto
- 	        	}
- 	        	else if(a<c){
- 	        	precio=	((60-c)+a)*0.035+(((b-d)-1)*60)*0.035;                                                 //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
-				 }
+	     		if (d<b){				 
+	     	    	if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
+ 		            	precio=(a-c)*0.035+((b-d)*60)*0.035;     //0.035  euros minuto
+ 	                	}
+ 	                else if(a<c){
+ 	        	        precio=	((60-c)+a)*0.035+(((b-d)-1)*60)*0.035;                                                 //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
+	     		    	}
+	 	    	    }
+	 	    	else if (d>b){                                                //tarifa para mas de 24h
+     				precio=16.5;
+		 	    	}			 	        
  		    	break;
  			}
  			else if(ambiental[i].tipo_etiqueta=='E'){
  				/*printf("La etiqueta de vehiculo es : Eco ");*/
  				parking[sicoincide].etiqueta_medioambiental='E';
- 				if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
- 		    	precio=((a-c)*0.035+((b-d)*60)*0.035)+((a-c)*0.035+((b-d)*60)*0.035)*0.05;   //0.05 penalizacion por tipo de etiqueta
- 	        	}
- 	        	else if(a<c){
- 	        	precio=	(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)+(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)*0.05;    //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
-				 }
+ 				if (d<b){
+ 		     		if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
+ 		            	precio=((a-c)*0.035+((b-d)*60)*0.035)+((a-c)*0.035+((b-d)*60)*0.035)*0.05;   //0.05 penalizacion por tipo de etiqueta
+ 	                	}
+ 	             	else if(a<c){
+ 	                	precio=	(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)+(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)*0.05;    //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
+		    	     	}
+		         	}
+		     	else if (d>b){                                                //tarifa para mas de 24h
+     				precio=16.5+(16.5*0.05);
+		 	    	}			 	        
  		    	break;
 	 		}
  			else if(ambiental[i].tipo_etiqueta=='C'){
  				/*printf("La etiqueta de vehiculo es : C ");*/
  				parking[sicoincide].etiqueta_medioambiental='C';
- 				if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
- 		    	precio=((a-c)*0.035+((b-d)*60)*0.035)+((a-c)*0.035+((b-d)*60)*0.035)*0.10;  //0.10 penalizacion por tipo de etiqueta
- 	        	}
- 	        	else if(a<c){
- 	        	precio=	(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)+(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)*0.10;    //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
-				 }
+ 				if (d<b){
+ 		    		if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
+ 	    	        	precio=((a-c)*0.035+((b-d)*60)*0.035)+((a-c)*0.035+((b-d)*60)*0.035)*0.10;  //0.10 penalizacion por tipo de etiqueta
+ 	                	}
+ 	            	else if(a<c){
+ 	                 	precio=	(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)+(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)*0.10;    //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
+	     	     		}
+     	        	}	     			
+	     		else if (d>b){                                                //tarifa para mas de 24h
+     				precio=16.5+(16.5*0.10);
+		 	    	}			         	
  		    	break;
  			}
  			else if(ambiental[i].tipo_etiqueta=='B'){
  				/*printf("La etiqueta de vehiculo es : B ");*/
  				parking[sicoincide].etiqueta_medioambiental='B';
- 				if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
- 		    	precio=((a-c)*0.035+((b-d)*60)*0.035)+((a-c)*0.035+((b-d)*60)*0.035)*0.15;   //0.15 penalizacion por tipo de etiqueta
- 	        	}
- 	        	else if(a<c){
- 	        	precio=	(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)+(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)*0.15;    //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
-				 }
+ 				if (d<b){
+ 	    			if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
+ 	    	        	precio=((a-c)*0.035+((b-d)*60)*0.035)+((a-c)*0.035+((b-d)*60)*0.035)*0.15;   //0.15 penalizacion por tipo de etiqueta
+ 	                 	}
+ 	            	else if(a<c){
+ 	                 	precio=	(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)+(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)*0.15;    //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
+     		    		}
+     	        	}     				
+     			else if (d>b){                                                //tarifa para mas de 24h
+     				precio=16.5+(16.5*0.15);
+		 	    	}	     	    	
  		    	break;
  			}			
  		    else if(ambiental[i].tipo_etiqueta=='S'){
  		    	/*printf("Su vehiculo no dispone de etiqueta medioambiental");*/
  		    	parking[sicoincide].etiqueta_medioambiental='S';
- 		    	if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
- 		    	precio=((a-c)*0.035+((b-d)*60)*0.035)+((a-c)*0.035+((b-d)*60)*0.035)*0.20;   //0.20 penalizacion por tipo de etiqueta
- 	        	}
- 	        	else if(a<c){
- 	        	precio=	(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)+(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)*0.20;    //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
-				 }
+ 		    	if (d<b){
+ 		        	if(a>=c){                                                                                    //necesario para no incurrir en erroe de calculo si los minutos de la hora de salida son menosres que los de entrada
+ 		            	precio=((a-c)*0.035+((b-d)*60)*0.035)+((a-c)*0.035+((b-d)*60)*0.035)*0.20;   //0.20 penalizacion por tipo de etiqueta
+ 	                	}
+     	        	else if(a<c){
+     	            	precio=	(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)+(((60-c)+a)*0.035+(((b-d)-1)*60)*0.035)*0.20;    //restamos uno a la diferencia de horas porque al contar los minutos en un cambio de hora si no restamos 1 sumariamos una hora de mas
+	    		     	}	  
+				else if (d>b){                                                //tarifa para mas de 24h
+     				precio=16.5+(16.5*0.20);
+		 	    	}		        	
  		    	break;
- 			}
- 		
-    	}
+ 		    	}		
+        	}
+         }
  		else{
  			precio=0;
 		 }
@@ -1096,7 +1158,7 @@ return existe_la_matricula;
 }
 
 void leerGanancias (char direccion3[], struct registro operaciones[] ){
-	int i,numero_operaciones;
+	int i;
     FILE*pp;
  	pp=fopen (direccion3,"r");
  	if (pp==NULL){
@@ -1104,12 +1166,13 @@ void leerGanancias (char direccion3[], struct registro operaciones[] ){
  		return ; // Se termina el programa en este punto
   	}
   	
- 		 
-    fscanf(pp,"%d %f %.0f:0%.0f  %d/%d/%d",&operaciones[0].numero,&operaciones[0].ganancias,&operaciones[0].hora,&operaciones[0].min,&operaciones[0].dia,&operaciones[0].mes,&operaciones[0].ano );
-    operaciones[0].numero=numero_operaciones;
-    for (i=1;i<=numero_operaciones;i++){
-    	fscanf(pp,"%d %f %.0f:0%.0f  %d/%d/%d",&operaciones[i].numero,&operaciones[i].ganancias,&operaciones[i].hora,&operaciones[i].min,&operaciones[i].dia,&operaciones[i].mes,&operaciones[i].ano );
+ 	fscanf(pp,"%d %f %d:%02d  %d/%d/%d\n",&operaciones[0].numero,&operaciones[0].ganancias,&operaciones[0].hora,&operaciones[0].min,&operaciones[0].dia,&operaciones[0].mes,&operaciones[0].ano );	 
     
+    if (operaciones[0].numero!=0){
+	
+    for (i=1;i<=200;i++){
+    	fscanf(pp,"%d %f %d:%02d  %d/%d/%d\n",&operaciones[i].numero,&operaciones[i].ganancias,&operaciones[i].hora,&operaciones[i].min,&operaciones[i].dia,&operaciones[i].mes,&operaciones[i].ano );
+        }
     }
  	gotoxy( 25, 31);
   	printf("Lectura del registro      OK\n");
@@ -1119,14 +1182,19 @@ void leerGanancias (char direccion3[], struct registro operaciones[] ){
 void sumarGanancias (struct registro operaciones[],float precio){
 	int numero_operaciones;
 	
+	system("cls");
 	time_t t=time(NULL);
     struct tm today = *localtime(&t);
  
-	numero_operaciones= operaciones[0].numero;
-	numero_operaciones++;
-	
-	
+	numero_operaciones= operaciones[0].numero+1;
+	printf("%d\n",operaciones[0].numero);
+	Sleep(2000);
+	operaciones[0].numero=numero_operaciones;
+	printf("%d\n",operaciones[0].numero);
+	Sleep(2000);
 	operaciones[0].ganancias+=precio;
+	printf("%d\n",numero_operaciones);
+	Sleep(2000);
 	
 	operaciones[numero_operaciones].numero=numero_operaciones;
 	operaciones[numero_operaciones].ganancias=precio;
@@ -1148,8 +1216,9 @@ void salvarGanancias (char direccion3[], struct registro operaciones[], int nume
  		return ; // Se termina el programa en este punto
   	}
   
-  for (i=0;i<=numero_operaciones;i++){ // como no quiero que imprima la fila 0 y si numero_operaciones es 1 no imprime nada le sumamos 1 a este ultimo
-    	fprintf(pp,"%d %f %.0f:0%.0f  %d/%d/%d",operaciones[i].numero,operaciones[i].ganancias,operaciones[i].hora,operaciones[i].min,operaciones[i].dia,operaciones[i].mes,operaciones[i].ano );
+  	fprintf(pp,"%d %f \n",operaciones[0].numero,operaciones[0].ganancias );
+  for (i=1;i<=numero_operaciones;i++){ // como no quiero que imprima la fila 0 y si numero_operaciones es 1 no imprime nada le sumamos 1 a este ultimo
+    	fprintf(pp,"%d %f %d:%02d  %d/%d/%d\n",operaciones[i].numero,operaciones[i].ganancias,operaciones[i].hora,operaciones[i].min,operaciones[i].dia,operaciones[i].mes,operaciones[i].ano );
     
     }
 
