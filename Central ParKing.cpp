@@ -51,7 +51,7 @@ int exixte_la_matricula(struct plaza parking[],struct distintivo ambiental[],int
 
 void leerGanancias (char direccion3[], struct registro operaciones[] );
 void sumarGanancias (struct registro operaciones[],float precio);
-void salvarGanancias (char direccion3[], struct registro operaciones[],int numero_operaciones );
+void salvarGanancias (char direccion3[], struct registro operaciones[] );
 
 void leerFichero(char direccion[],struct plaza parking[]);
 void salvarFichero(char direccion[],struct plaza parking[]);
@@ -64,7 +64,7 @@ int main(){
 	
  system("mode con: cols=81 lines=55");  // establece el tamaño de pantalla
  int x,y;	
- int opcioninicio,parpadeo,opcionregistro,opcionplanta,plazaasignada,matriculavalida,intentos,sicoincide,existe,numero_operaciones;
+ int opcioninicio,parpadeo,opcionregistro,opcionplanta,plazaasignada,matriculavalida,intentos,sicoincide,existe;
  float precio;
  bool repite,repite2,repite3,repite4,repite5;     //establece la variable que permite repite la aparicion del menu con do en caso de defaul (digito no valido)
  int i,k,j;
@@ -307,8 +307,8 @@ do{
                     	 		
                     	 		leerGanancias(direccion3,operaciones);  //tras generar el tickect trabajamos con nuetro balance de cuentas y operaciones                    	 		
                     	 		sumarGanancias (operaciones,precio);
-                    	 		numero_operaciones= operaciones[0].numero;
-                    	 		salvarGanancias (direccion3,operaciones,numero_operaciones);
+                    	 		
+                    	 		salvarGanancias (direccion3,operaciones);
                     	 		
                     	 		parking[sicoincide].estado_plaza=0;   //asigna un 0(libre) a la plaza en la que coincide con la sicoincide
                     	 		parking[sicoincide].hora_entrada=0;
@@ -620,7 +620,7 @@ do{
 						operaciones[i].mes=0;
 						operaciones[i].ano=0;
 					 }
-				 	salvarGanancias (direccion3,operaciones,numero_operaciones);
+				 	salvarGanancias (direccion3,operaciones);
  	    			system("cls");
  	    	        repite=true;
  		            break;	
@@ -1216,7 +1216,7 @@ void sumarGanancias (struct registro operaciones[],float precio){
 	
 }
 
-void salvarGanancias (char direccion3[], struct registro operaciones[], int numero_operaciones ){
+void salvarGanancias (char direccion3[], struct registro operaciones[] ){
 	int i;
 	
     FILE*pp;
@@ -1227,7 +1227,7 @@ void salvarGanancias (char direccion3[], struct registro operaciones[], int nume
   	}
   
   	fprintf(pp,"%d %f \n",operaciones[0].numero,operaciones[0].ganancias );
-  for (i=1;i<=numero_operaciones;i++){ // como no quiero que imprima la fila 0 y si numero_operaciones es 1 no imprime nada le sumamos 1 a este ultimo
+  for (i=1;i<=operaciones[0].ganancias;i++){ // como no quiero que imprima la fila 0 y si numero_operaciones es 1 no imprime nada le sumamos 1 a este ultimo
     	fprintf(pp,"%d %f %d:%02d  %d/%d/%d\n",operaciones[i].numero,operaciones[i].ganancias,operaciones[i].hora,operaciones[i].min,operaciones[i].dia,operaciones[i].mes,operaciones[i].ano );
     
     }
