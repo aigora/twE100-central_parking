@@ -90,37 +90,9 @@ int main(){
  leerDistintivo(direccion2,ambiental);
  Sleep(500);
  leerGanancias(direccion3,operaciones);
- for (i=0;i<=6;i++){
-    	printf("%d %f %d:%02d  %d/%d/%d\n",operaciones[i].numero,operaciones[i].ganancias,operaciones[i].hora,operaciones[i].min,operaciones[i].dia,operaciones[i].mes,operaciones[i].ano );
-    
-    }
- Sleep(1000);
- system ("cls");
- 
- fecha();
- 
- 
-/*
- for (i=0;i<=20000;i++){
- 
-						
-							printf("%s %c\n", ambiental[i].matricula , ambiental[i].tipo_etiqueta );
-							Sleep(1000);
-}
-getchar();*/
- 
- 
- 
-/*
- for (i=1;i<=150;i++){
- 
-						
-							printf("\n%d %d %c %d %s\n", parking[i].numero_plaza, parking[i].planta, parking[i].tipo_plaza, parking[i].estado_plaza, parking[i].matricula);
-}
-getchar();*/
 
 do{
- system("color 0E"); //varia colorde consola yu letras	
+ system("color 0E"); //varia color de consola yu letras	
  fecha();
  gotoxy( 22, 10);
  
@@ -1196,15 +1168,9 @@ void sumarGanancias (struct registro operaciones[],float precio){
 	time_t t=time(NULL);
     struct tm today = *localtime(&t);
  
-	numero_operaciones= operaciones[0].numero+1;
-	printf("%d\n",operaciones[0].numero);
-	Sleep(2000);
-	operaciones[0].numero=numero_operaciones;
-	printf("%d\n",operaciones[0].numero);
-	Sleep(2000);
+	numero_operaciones= operaciones[0].numero+1;	
+	operaciones[0].numero=numero_operaciones;	
 	operaciones[0].ganancias+=precio;
-	printf("%d\n",numero_operaciones);
-	Sleep(2000);
 	
 	operaciones[numero_operaciones].numero=numero_operaciones;
 	operaciones[numero_operaciones].ganancias=precio;
