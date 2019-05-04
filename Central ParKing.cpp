@@ -600,8 +600,8 @@ do{
             printf("                   %d           %0.2f                  %d:%02d  %d/%d/%d\n\n\n",operaciones[i].numero,operaciones[i].ganancias,operaciones[i].hora,operaciones[i].min,operaciones[i].dia,operaciones[i].mes,operaciones[i].ano );
  	        }
  	        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
- 	        printf("\t\t\t\t    1 - Resetear    \n\n");
- 	    	printf("\t\t\t\t    0 - Volver      \n");
+ 	        printf("\t\t\t\t    1 - Resetear   \n\n");
+ 	    	printf("\t\t\t\t    0 - Volver     \n");
             
  	    	scanf("%d",&eleccion);
  	    	switch(eleccion){
