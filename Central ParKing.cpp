@@ -6,12 +6,15 @@
 #include <ctime>  //no hace falta creo
 #include <time.h>
 
-struct tipos_distintivo { //no usado
-	char pegatina_cero;
-	char pegatina_eco;
-	char pegatina_c;
-	char pegatina_b;
-	char sin_pegatina;
+
+struct registro { //no usado
+	int numero;
+	float ganancias;
+	int hora;
+    int min;
+    int dia;
+    int mes;
+    int ano;
 };
 
 struct plaza {
@@ -46,6 +49,10 @@ void buscar_vehiculo (struct plaza parking[],int desde,int hasta, int sicoincide
 void convertir_a_mayus (char matricula[]);
 int exixte_la_matricula(struct plaza parking[],struct distintivo ambiental[],int plazaasignada);
 
+void leerGanancias (char direccion3[], struct registro operaciones[] );
+void sumarGanancias (struct registro operaciones[],float precio);
+void salvarGanancias (char direccion3[], struct registro operaciones[],int numero_operaciones );
+
 void leerFichero(char direccion[],struct plaza parking[]);
 void salvarFichero(char direccion[],struct plaza parking[]);
 void gotoxy(short x, short y);
@@ -57,7 +64,7 @@ int main(){
 	
  system("mode con: cols=81 lines=55");  // establece el tamaño de pantalla
  int x,y;	
- int opcioninicio,parpadeo,opcionregistro,opcionplanta,plazaasignada,matriculavalida,intentos,sicoincide,existe;
+ int opcioninicio,parpadeo,opcionregistro,opcionplanta,plazaasignada,matriculavalida,intentos,sicoincide,existe,numero_operaciones;
  float precio;
  bool repite,repite2,repite3,repite4;     //establece la variable que permite repite la aparicion del menu con do en caso de defaul (digito no valido)
  int i,k,j;
@@ -65,10 +72,11 @@ int main(){
  char tipovehiculo;	// para el menu
  char direccion[] = "plazas.txt";
  char direccion2[] = "export_distintivo_ambiental.txt";
+ char direccion3[] = "registro.txt";
  char auxmatricula[7];
  struct plaza parking[151];       // 150 de las plazas    la 0 de auxiliar y la sicoincide total 151
  struct distintivo ambiental[20000];
- struct tipos_distintivo pegatinas ={'O','E','C','B','S'};
+ struct registro operaciones[2000];
  
  int nplazas=150; // NO UTIL DE MOMENTO
  gotoxy( 25, 20); 
@@ -80,8 +88,13 @@ int main(){
  leerFichero(direccion,parking); 
  Sleep(500);
  leerDistintivo(direccion2,ambiental);
+ Sleep(500);
+ leerGanancias(direccion3,operaciones);
+ for (i=0;i<=3;i++){
+    	printf("%d %f %.0f:0%.0f  %d/%d/%d\n",operaciones[i].numero,operaciones[i].ganancias,operaciones[i].hora,operaciones[i].min,operaciones[i].dia,operaciones[i].mes,operaciones[i].ano );
+    
+    }
  Sleep(1000);
- 
  system ("cls");
  
  fecha();
@@ -117,6 +130,7 @@ do{
  printf("\t\t       1 - Registrar Entrada o Salida         \n\n");	
  printf("\t\t       2 - Consultar estado del Parking       \n\n");
  printf("\t\t       3 - Consultar tarifas                  \n\n");
+ printf("\t\t       4 - Registro de operaciones            \n\n");
 
  scanf("%d",&opcioninicio);
  
@@ -291,6 +305,9 @@ do{
                     	 		Sleep(1500);
                     	 		ticket(parking,sicoincide,precio);
                     	 		
+                    	 		sumarGanancias (operaciones,precio);
+                    	 		numero_operaciones= operaciones[0].numero;
+                    	 		salvarGanancias (direccion3,operaciones,numero_operaciones);
                     	 		
                     	 		parking[sicoincide].estado_plaza=0;   //asigna un 0(libre) a la plaza en la que coincide con la sicoincide
                     	 		parking[sicoincide].hora_entrada=0;
@@ -567,6 +584,11 @@ do{
  	    	repite=true;
  		    break;	
  	    	}
+ 	    case 4:{
+ 	    	
+			break;
+		 }
+ 	    
      	default:
  	    	while (opcioninicio!=1 && opcioninicio!=2 && opcioninicio!=3){
   		    printf("Por favor, introduce una opcion valida\n");
@@ -1072,6 +1094,74 @@ for(i=0;i<=20000;i++){
    
 return existe_la_matricula;
 }
+
+void leerGanancias (char direccion3[], struct registro operaciones[] ){
+	int i,numero_operaciones;
+    FILE*pp;
+ 	pp=fopen (direccion3,"r");
+ 	if (pp==NULL){
+ 	    printf("Error al abrir el fichero\n");
+ 		return ; // Se termina el programa en este punto
+  	}
+  	
+ 		 
+    fscanf(pp,"%d %f %.0f:0%.0f  %d/%d/%d",&operaciones[0].numero,&operaciones[0].ganancias,&operaciones[0].hora,&operaciones[0].min,&operaciones[0].dia,&operaciones[0].mes,&operaciones[0].ano );
+    operaciones[0].numero=numero_operaciones;
+    for (i=1;i<=numero_operaciones;i++){
+    	fscanf(pp,"%d %f %.0f:0%.0f  %d/%d/%d",&operaciones[i].numero,&operaciones[i].ganancias,&operaciones[i].hora,&operaciones[i].min,&operaciones[i].dia,&operaciones[i].mes,&operaciones[i].ano );
+    
+    }
+ 	gotoxy( 25, 31);
+  	printf("Lectura del registro      OK\n");
+ 	fclose(pp);	
+}
+
+void sumarGanancias (struct registro operaciones[],float precio){
+	int numero_operaciones;
+	
+	time_t t=time(NULL);
+    struct tm today = *localtime(&t);
+ 
+	numero_operaciones= operaciones[0].numero;
+	numero_operaciones++;
+	
+	
+	operaciones[0].ganancias+=precio;
+	
+	operaciones[numero_operaciones].numero=numero_operaciones;
+	operaciones[numero_operaciones].ganancias=precio;
+	operaciones[numero_operaciones].hora=today.tm_hour;
+	operaciones[numero_operaciones].min=today.tm_min;
+	operaciones[numero_operaciones].dia=today.tm_mday;
+	operaciones[numero_operaciones].mes=today.tm_mon+1;
+	operaciones[numero_operaciones].ano=today.tm_year+1900;
+	
+}
+
+void salvarGanancias (char direccion3[], struct registro operaciones[], int numero_operaciones ){
+	int i;
+	
+    FILE*pp;
+ 	pp=fopen (direccion3,"w");
+ 	if (pp==NULL){
+ 	    printf("Error al abrir el fichero\n");
+ 		return ; // Se termina el programa en este punto
+  	}
+  
+  for (i=0;i<=numero_operaciones;i++){ // como no quiero que imprima la fila 0 y si numero_operaciones es 1 no imprime nada le sumamos 1 a este ultimo
+    	fprintf(pp,"%d %f %.0f:0%.0f  %d/%d/%d",operaciones[i].numero,operaciones[i].ganancias,operaciones[i].hora,operaciones[i].min,operaciones[i].dia,operaciones[i].mes,operaciones[i].ano );
+    
+    }
+
+ 	fclose(pp);	
+}
+
+
+
+
+
+
+
 
 void leerFichero(char direccion[],struct plaza parking[]) {
  	int i;
