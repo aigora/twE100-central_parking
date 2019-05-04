@@ -44,7 +44,7 @@ void grafico_plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta);
 void listado_plazas_de_aparcamiento(struct plaza parking[],int desde,int hasta);
 void leerDistintivo(char direccion2[],struct distintivo ambiental[]);   
 float calculartarifa(struct plaza parking[],struct distintivo ambiental[], int sicoincide);
-void ticket(struct plaza parking[], int sicoincide, float precio);
+void ticket(struct plaza parking[], int sicoincide, float precio, struct registro operaciones[]);
 void buscar_vehiculo (struct plaza parking[],int desde,int hasta, int sicoincide);
 void convertir_a_mayus (char matricula[]);
 int exixte_la_matricula(struct plaza parking[],struct distintivo ambiental[],int plazaasignada);
@@ -303,8 +303,9 @@ do{
 		 							printf("Moto retirada correctamente. Generando ticket...\n");
 		 						}              			       
                     	 		Sleep(1500);
-                    	 		ticket(parking,sicoincide,precio);
-                    	 		leerGanancias(direccion3,operaciones);
+                    	 		ticket(parking,sicoincide,precio,operaciones);
+                    	 		
+                    	 		leerGanancias(direccion3,operaciones);  //tras generar el tickect trabajamos con nuetro balance de cuentas y operaciones
                     	 		
                     	 		sumarGanancias (operaciones,precio);
                     	 		numero_operaciones= operaciones[0].numero;
@@ -588,41 +589,14 @@ do{
  	    case 4:{
  	    	system("color 0E");
  	    	fecha();
- 	    	system("mode con: cols=81 lines=2000");
- 	    		int pointer = 0;
-	system("cls");
-	while(true)
-	{
-		
-		
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-		printf("\n\nMain Menu\n\n");
-		
-		
-		while(true)
-		{
-			if (GetAsyncKeyState(VK_UP) != 0)
-			{
-				pointer -= 1;
-				
-				break;
-			}
-			else if (GetAsyncKeyState(VK_DOWN) != 0)
-			{
-				pointer += 1;
-				
-				break;
-			}
-			
-		}
-		
-		Sleep(150);
-	}
- 	    	
- 	    	
- 	    	
- 	    	
- 	    	
+ 	    	system("mode con: cols=81 lines=2000");	    	        
+         	printf("\n\n   Numero de operaciones     Ingresos totales   \n\n"); 
+            printf("                   %d           %0.2f \n",operaciones[0].numero,operaciones[0].ganancias );
+            printf("\n\n   Numero de operacion       Ingresos             Fecha de la operacion   \n\n");
+            
+            for (i=1;i<=operaciones[0].numero;i++){
+            printf("                   %d           %0.2f                  %d:%02d  %d/%d/%d\n",operaciones[i].numero,operaciones[i].ganancias,operaciones[i].hora,operaciones[i].min,operaciones[i].dia,operaciones[i].mes,operaciones[i].ano );
+ 	        }
  	    	
 			break;
 		 }
@@ -997,7 +971,7 @@ float calculartarifa(struct plaza parking[],struct distintivo ambiental[], int s
  	return precio;
 }
 
-void ticket(struct plaza parking[], int sicoincide, float precio){
+void ticket(struct plaza parking[], int sicoincide, float precio, struct registro operaciones[]){
 	system("cls");
 	system("color 0E");
 	
@@ -1023,35 +997,35 @@ void ticket(struct plaza parking[], int sicoincide, float precio){
 	gotoxy( 14, 17);
 	printf(" *                                                 * ");	
 	gotoxy( 14, 18);
-	printf(" *      Matricula:                    %s      * ", parking[sicoincide].matricula);
+	printf(" *      Operacion numero:                    %d    * ", operaciones[0].numero+1);
 	gotoxy( 14, 19);
 	printf(" *                                                 * ");
 	gotoxy( 14, 20);
-	printf(" *      Tipo de vehiculo:                   %c      * ", parking[sicoincide].tipo_plaza);
+	printf(" *      Matricula:                    %s      * ", parking[sicoincide].matricula);
 	gotoxy( 14, 21);
 	printf(" *                                                 * ");
 	gotoxy( 14, 22);
-	printf(" *      Etiqueta medioambiental:            %c      * ", parking[sicoincide].etiqueta_medioambiental);
+	printf(" *      Tipo de vehiculo:                   %c      * ", parking[sicoincide].tipo_plaza);
 	gotoxy( 14, 23);
 	printf(" *                                                 * ");
 	gotoxy( 14, 24);
-	printf(" *      Entrada (h/min):                %d:%02d      * ", parking[sicoincide].hora_entrada,parking[sicoincide].min_entrada);
+	printf(" *      Etiqueta medioambiental:            %c      * ", parking[sicoincide].etiqueta_medioambiental);
 	gotoxy( 14, 25);
 	printf(" *                                                 * ");
 	gotoxy( 14, 26);
-	printf(" *      Salida (h/min):                 %d:%02d      * ", parking[sicoincide].hora_salida,parking[sicoincide].min_salida);
+	printf(" *      Entrada (h/min):                %d:%02d      * ", parking[sicoincide].hora_entrada,parking[sicoincide].min_entrada);
 	gotoxy( 14, 27);
 	printf(" *                                                 * ");
 	gotoxy( 14, 28);
-	printf(" *                                                 * ");
+	printf(" *      Salida (h/min):                 %d:%02d      * ", parking[sicoincide].hora_salida,parking[sicoincide].min_salida);
 	gotoxy( 14, 29);
 	printf(" *                                                 * ");
 	gotoxy( 14, 30);
-	printf(" *      Importe total (euros):          %.2f       * ", precio);
+	printf(" *                                                 * ");
 	gotoxy( 14, 31);
 	printf(" *                                                 * ");
 	gotoxy( 14, 32);
-	printf(" *                                                 * ");
+	printf(" *      Importe total (euros):          %.2f       * ", precio);
 	gotoxy( 14, 33);
 	printf(" *                                                 * ");
 	gotoxy( 14, 34);
@@ -1059,14 +1033,18 @@ void ticket(struct plaza parking[], int sicoincide, float precio){
 	gotoxy( 14, 35);
 	printf(" *                                                 * ");
 	gotoxy( 14, 36);
-	printf(" *       Hasta pronto. Gracias por su visita.      * ");
+	printf(" *                                                 * ");
 	gotoxy( 14, 37);
 	printf(" *                                                 * ");
 	gotoxy( 14, 38);
-	printf(" *                                                 * ");
+	printf(" *       Hasta pronto. Gracias por su visita.      * ");
 	gotoxy( 14, 39);
-	printf(" *************************************************** ");
+	printf(" *                                                 * ");
 	gotoxy( 14, 40);
+	printf(" *                                                 * ");
+	gotoxy( 14, 41);
+	printf(" *************************************************** ");
+	gotoxy( 14, 42);
 	printf("                                                     ");
 	gotoxy( 14, 50);
 	printf("             Pulse una tecla para salir            ");
@@ -1165,15 +1143,11 @@ void leerGanancias (char direccion3[], struct registro operaciones[] ){
  	    printf("Error al abrir el fichero\n");
  		return ; // Se termina el programa en este punto
   	}
-  	
- 	fscanf(pp,"%d %f %d:%02d  %d/%d/%d\n",&operaciones[0].numero,&operaciones[0].ganancias,&operaciones[0].hora,&operaciones[0].min,&operaciones[0].dia,&operaciones[0].mes,&operaciones[0].ano );	 
-    
-    if (operaciones[0].numero!=0){
 	
-    for (i=1;i<=200;i++){
+    for (i=0;i<=2000;i++){            //admite hasta 2000 operaciones
     	fscanf(pp,"%d %f %d:%02d  %d/%d/%d\n",&operaciones[i].numero,&operaciones[i].ganancias,&operaciones[i].hora,&operaciones[i].min,&operaciones[i].dia,&operaciones[i].mes,&operaciones[i].ano );
         }
-    }
+    
  	gotoxy( 25, 31);
   	printf("Lectura del registro      OK\n");
  	fclose(pp);	
