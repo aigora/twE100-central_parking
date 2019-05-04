@@ -62,7 +62,7 @@ void fecha();
 
 int main(){
 	
- system("mode con: cols=81 lines=55");  // establece el tamaño de pantalla
+ system("mode con: cols=81 lines=55");  // establece el tamaÃ±o de pantalla
  int x,y;	
  int opcioninicio,parpadeo,opcionregistro,opcionplanta,plazaasignada,matriculavalida,intentos,sicoincide,existe;
  float precio;
@@ -90,6 +90,8 @@ int main(){
  leerDistintivo(direccion2,ambiental);
  Sleep(500);
  leerGanancias(direccion3,operaciones);
+ Sleep(500);
+ system("cls");	
 
 do{
  system("color 0E"); //varia color de consola yu letras	
@@ -635,7 +637,7 @@ int coincide(struct plaza parking[], int plaza){
 		
  		if( strcmp(parking[i].matricula,parking[plaza].matricula)==0){		// if si coincide 
 		   /*coincide=1;*/
- 		    coincide=i; //se añade para que la funcion sirva para registrar la salida del parking ya que necesitamos saber que plaza es la quie coincide para cambiar su estado
+ 		    coincide=i; //se aÃ±ade para que la funcion sirva para registrar la salida del parking ya que necesitamos saber que plaza es la quie coincide para cambiar su estado
 		                //tambien modificamos las condiciones y en sicoincide==1 ponemos sicoincide!=0		    		    
 		    break;
  	    }	
